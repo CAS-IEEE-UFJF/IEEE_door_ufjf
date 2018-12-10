@@ -1,18 +1,23 @@
 //fazendo leitura na marra
 //ainda em desenvolvimento
-//parece que algumas teclas agarram
+
+/*parece que algumas teclas agarram.
+  obs: o problema foi corrigido colocando resistor e ground nos pinos de leitura. equivalente a button push_down*/
 
 #include <Arduino.h>
 
-const int l1 = 0;
-const int l2 = 12;
-const int l3 = 14;
-const int l4 = 2;
+//olhando os pinos da matriz de frente. O primeiro pino da esquerda é o 1 o segundo é o 2 e assim por diante ate o oitavo pino
 
-const int c1 = 16;
-const int c2 = 4;
-const int c3 = 5;
-const int c4 = 13;
+const int l1 = 0;  //D3 in nodeMCU and 1 in keypad
+const int l2 = 12; //D6 in nodeMCU and 2 in keypad
+const int l3 = 14; //D5 in nodeMCU and 3 in keypad
+const int l4 = 2;  //D4 in nodeMCU and 4 in keypad
+
+                   //colocar ground (com resistor)
+const int c1 = 16; //D0 in nodeMCU and 5 in keypad
+const int c2 = 4;  //D2 in nodeMCU and 6 in keypad
+const int c3 = 5;  //D1 in nodeMCU and 7 in keypad
+const int c4 = 13; //D7 in nodeMCU and 8 in keypad
 
 void desligar (){
   digitalWrite(l1, LOW);
@@ -21,22 +26,68 @@ void desligar (){
   digitalWrite(l4, LOW);
 }
 
-void pesquisar (){
+void pesquisar (int l){
   if (digitalRead(c1) == HIGH){
-    Serial.println("c1");
+    if(l == 1)
+      Serial.print("1  ");
+    if(l == 2)
+      Serial.print("4  ");
+    if(l == 3)
+      Serial.print("7  ");
+    if(l == 4)
+      Serial.print("*  ");
+
+    while(digitalRead(c1) == HIGH){
+      //travar code
+    }
   }
 
   if (digitalRead(c2) == HIGH){
-    Serial.println("c2");
+    if(l == 1)
+      Serial.print("2  ");
+    if(l == 2)
+      Serial.print("5  ");
+    if(l == 3)
+      Serial.print("8  ");
+    if(l == 4)
+      Serial.print("0  ");
+
+    while(digitalRead(c2) == HIGH){
+      //travar code
+    }
   }
 
   if (digitalRead(c3) == HIGH){
-    Serial.println("c3");
+    if(l == 1)
+      Serial.print("3  ");
+    if(l == 2)
+      Serial.print("6  ");
+    if(l == 3)
+      Serial.print("9  ");
+    if(l == 4)
+      Serial.print("#  ");
+
+    while(digitalRead(c3) == HIGH){
+      //travar code
+    }
   }
 
   if (digitalRead(c4) == HIGH){
-    Serial.println("c4");
+    if(l == 1)
+      Serial.print("A  ");
+    if(l == 2)
+      Serial.print("B  ");
+    if(l == 3)
+      Serial.print("C  ");
+    if(l == 4)
+      Serial.print("D  ");
+
+    while(digitalRead(c4) == HIGH){
+      //travar code
+    }
   }
+
+  Serial.println(" ");
 }
 
 void setup (){
@@ -61,28 +112,30 @@ void setup (){
 void loop (){
   desligar();
   digitalWrite(l1, HIGH);
-  pesquisar();
+  pesquisar(1);
 
   delay(50);
 
   desligar();
   digitalWrite(l2, HIGH);
-  pesquisar();
+  pesquisar(2);
 
   delay(50);
 
   desligar();
   digitalWrite(l3, HIGH);
-  pesquisar();
+  pesquisar(3);
 
   delay(50);
 
   desligar();
   digitalWrite(l4, HIGH);
-  pesquisar();
+  pesquisar(4);
 
   delay(100);
 }
+
+/**********************************/
 
 //usando a biblioteca keypad :D
 /*//https://techtutorialsx.com/2017/03/18/esp8266-interfacing-with-a-4x4-matrix-keypad/ (modificado 08/12/2018)
