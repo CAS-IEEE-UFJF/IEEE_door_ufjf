@@ -1,12 +1,11 @@
 # [3º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version3)
 
 # [ 2º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version2)
-
+Apresentação
 
 O Ramo Estudantil IEEE devido ao seu grande número de membros, necessitava de um melhor controle de acesso ao seu domínio. Porém, as trancas convencionais demandam cópias de chave e não havia como saber quem entrou e em qual horário. A partir disso fizemos um levantamento de qual seria a melhor proposta para resolver o controle de acesso ao tempo que pudéssemos gerenciar as chaves. Em nosso levantamento descobrimos que as carteirinhas estudantis possuíam um dispositivo interno para identificação chamado de radiofrequência chamado RFID, elas por sua vez, são chaves únicas e podem ser obtidas através de leitura. 
 
-
-Objetivo:
+Objetivo
 
 O projeto Porta Tunada 2.0 consiste em um equipamento eficiente e de baixo custo para controlar a entrada e saída de pessoas na sala do Ramo Estudantil IEEE UFJF, estando restrito o acesso somente aos membros que tenham suas carteirinhas estudantis cadastradas. Nessa 2º versão fomentamos a equipe o uso do nodeMCU (ESP8266) e para desenvolver a capacidade de programação em IOT.
 
