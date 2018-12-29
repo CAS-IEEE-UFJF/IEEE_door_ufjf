@@ -1,4 +1,5 @@
-# [3º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version3)
+# ~~[3º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version3)~~
+talvez seja melhor visto como itens adicionais.
 
 # [ 2º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version2)
 Apresentação
