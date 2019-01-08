@@ -1,3 +1,6 @@
-version2/CODE/test_simples.ino        #são testes simples que não devem ir para github
-version2/CODE/textHTML_exemplo.html   #são testes simples que não devem ir para github
-run/ #ignorar na hora de fazer commit
+#são testes simples que não devem ir para github
+version2/CODE/test_simples.ino
+version2/CODE/textHTML_exemplo.html
+
+#pasta run contem todos os arquivsos do platfotmIO
+run/

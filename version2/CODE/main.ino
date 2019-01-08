@@ -1,26 +1,32 @@
 /*******************************/
-/*  atualizacao                */
-/*  29/10/2018                 */
+/*      atualizacao            */
+/*       07/01/2019            */
 /*******************************/
-//library
-#include <ESP8266WiFi.h>
+
+/*****library_str******/ //str == start
+#include <Arduino.h> //tem que importar pois estou usando platformIO
+
+#include <ESP8266WiFi.h>  //na real mesmo tem biblioteca aqui que não esta sendo usada mas deixa assim mesmo
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
-
 #include <DNSServer.h>
 #include <ESP8266HTTPClient.h>
-#include <FirebaseArduino.h>
 
-#include <Arduino.h> 
-#include <SPI.h> //protocol
+#include <FirebaseArduino.h> //o biblioteca problematica. só de importar já da erro
+
+#include <SPI.h> //protocol SPI
 #include <MFRC522.h> //RFID
-/************************/
+/*****library_end******/
 
 /************************/
-#define RST_PIN 5
-#define SS_PIN 15
-MFRC522 mfrc522(SS_PIN, RST_PIN); 
+#define RST_PIN 5  //GPIO05 ou D1 no nodeMCU, Reset no RFID
+#define SS_PIN 16  //GPIO15 ou D0 no nodeMCU, SDA no RFID
+                   //GPIO12 ou D6 no nodeMCU, MISO no RFID
+                   //GPIO13 ou D7 no nodeMCU, MOSI no RFID
+                   //GPIO14 ou D5 no nodeMCU, SCK no RFID
+
+MFRC522 mfrc522(SS_PIN, RST_PIN);
 
 #define RED_LED D4
 #define GRE_LED D3
@@ -30,34 +36,33 @@ const int button = A0;
 /************************/
 
 /************************/
-//const char* ssid = "";
-//const char* password = "";
+const char* ssid = "";      //nome da rede
+const char* password = "";  //senha da rede
 
-const char* ssid = "";
-const char* password = "";
-
-#define FIREBASE_HOST ""
+#define FIREBASE_HOST ""   //autenticação no firebase
 #define FIREBASE_AUTH ""
 
-ESP8266WebServer server(80);
+ESP8266WebServer server(80);  //porta 80 é padrão para entrada e saída de dados
 /************************/
 
 /************************/
 String tag_now = "";
 int tag_db = 0;
 
-int tam = 52; //tam db
-String database [] = {
+int tam = 2; //tam db
+String database [2] = {
+  "51 4F E2 08", "WALMOR"
 };
 
 
 String tag_backup[32] = ""; //codigo da tag
-int tag_db_backup[32]; //posicao da tag
-int tag_y_db_backup[32]; //esta no db?
+int tag_db_backup[32];      //posicao da tag
+int tag_y_db_backup[32];    //está no db?
 /************************/
 
-/************************/
+/*******server_str*******/
 void handleRoot (){
+  //html mega complexo...hahaha
   String textHTML;
 
   textHTML += "<!DOCTYPE HTML>";
@@ -69,7 +74,7 @@ void handleRoot (){
         textHTML += "body{background-color: rgb(235, 235, 245, 100);}";
       textHTML += "</style>";
     textHTML += "</head>";
-    
+
     textHTML += "<body>";
       textHTML += "<center>";
       textHTML += "<h1>TAG</h1>";
@@ -91,7 +96,7 @@ void handleRoot (){
 
     textHTML += "</body>";
   textHTML += "</html>";
-   
+
   server.send(200, "text/html", textHTML);
 }
 
@@ -109,9 +114,9 @@ void handleNotFound (){
   }
   server.send(404, "text/plain", message);
 }
-/************************/
+/*******server_end*******/
 
-void go_in (){ //normal go_in
+void go_in (){ //efeito normal de entrada (go_in)
   digitalWrite(GRE_LED, HIGH);
   digitalWrite(RED_LED, LOW);
 
@@ -142,12 +147,12 @@ void go_in (){ //normal go_in
   delay(50);
   digitalWrite(GRE_LED, LOW);
   digitalWrite(RED_LED, HIGH);
-  delay(100); 
+  delay(100);
   digitalWrite(GRE_LED, LOW);
   digitalWrite(RED_LED, LOW);
 }
 
-void go_in_DEV (){ //for developer
+void go_in_DEV (){ //efeito diferenciado de entrada (go_in_DEV) para developer
   digitalWrite(GRE_LED, HIGH);
   digitalWrite(RED_LED, LOW);
 
@@ -182,7 +187,7 @@ void go_in_DEV (){ //for developer
 
   digitalWrite(GRE_LED, LOW);
   digitalWrite(RED_LED, HIGH);
-  delay(100); 
+  delay(100);
   digitalWrite(GRE_LED, LOW);
   digitalWrite(RED_LED, LOW);
 }
@@ -213,7 +218,7 @@ void donot_go_in (){ //tag nao cadastrada
   digitalWrite(RED_LED, LOW);
 }
 
-void up_firebase (String tag, boolean go_db){
+void up_firebase (String tag, boolean go_db){ //enviar as tag para firebase
   if(go_db)
     Firebase.pushString("tag_read", tag + ", " + database[tag_db_backup[0] + 1]);
   else
@@ -221,18 +226,19 @@ void up_firebase (String tag, boolean go_db){
 
   if (Firebase.failed()) {
       Serial.print("setting /number failed:");
-      Serial.println(Firebase.error());  
+      Serial.println(Firebase.error());
   }
 
   Serial.print("firebase: tag now: ");
   Serial.println(tag);
 }
 
-void function_RFID (){ 
-  /*essa funcao faz leitura do EFID e verifica 
+void function_RFID (){
+  /*essa funcao faz leitura do RFID e verifica
     se a tag esta no banco de dados. se sim, chama
     a funcao go_in ou go_in_DEV se for tag especial(developer)
   */
+  //é confuso mas funciona
 
   // Procura por cartao RFID
   if ( ! mfrc522.PICC_IsNewCardPresent())
@@ -246,8 +252,6 @@ void function_RFID (){
   //Serial.print("UID da tag :");
   String conteudo= "";
   for (byte i = 0; i < mfrc522.uid.size; i++){
-     //Serial.print(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " ");
-     //Serial.print(mfrc522.uid.uidByte[i], HEX);
      conteudo.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
      conteudo.concat(String(mfrc522.uid.uidByte[i], HEX));
   }
@@ -265,12 +269,13 @@ void function_RFID (){
     tag_now = conteudo.substring(1);
 
     tag_backup[0] = tag_now;
+    Serial.println(tag_now);
 
     for(int i = 0; i < tam; i++){
       if (database[i] == tag_now){
         Serial.println("Yes db");
-  
-        if ((database[i + 1] == "wesley") ||
+
+        if ((database[i + 1] == "wesley") || //quem são os developer ?
             (database[i + 1] == "Walmor") ||
             (database[i + 1] == "Dalila"))
           go_in_DEV();
@@ -294,7 +299,6 @@ void function_RFID (){
     }
 
     up_firebase(tag_now, go); //envia a tag para firebase
-
     go = false;
   }
 }
@@ -320,7 +324,7 @@ void setup (){
     delay(200);
     Serial.print(".");
   }
-  
+
   Serial.println("");
   Serial.print("Connected to ");
   Serial.println(ssid);
@@ -347,10 +351,14 @@ void setup (){
 }
 
 void loop (){
-  if (analogRead(button) >= 1000){
-    go_in();
+  mfrc522.PCD_Init();
+  mfrc522.PCD_SetAntennaGain(mfrc522.RxGain_max);
+  delay(50);
 
-    for(int i = 31; i > 0; i--){
+  if (analogRead(button) >= 1000){ //se o botão foi presionado. Isso significa que tem gente dentro do ramo querendo sair
+    go_in(); //abrir a porta
+
+    for(int i = 31; i > 0; i--){ //atualizar db
       tag_backup [i] = tag_backup [i - 1];
       tag_db_backup [i] = tag_db_backup [i - 1];
       tag_y_db_backup [i] = tag_y_db_backup [i - 1];
@@ -362,7 +370,7 @@ void loop (){
     Serial.println("button pressed");
     up_firebase("button pressed", false);
 
-    Serial.print("IP address: ");
+    Serial.print("IP address: "); //mostrar qual o IP do esp na porta serial. para develo
     Serial.println(WiFi.localIP());
   }
 
@@ -370,9 +378,4 @@ void loop (){
     function_RFID();
     server.handleClient();
   }
-
-  /*if(millis() > 30000){
-    Serial.println("tchau");
-    ESP.restart();
-  }*/
 }
