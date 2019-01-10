@@ -1,6 +1,6 @@
 /*******************************/
 /*      atualizacao            */
-/*       07/01/2019            */
+/*       10/01/2019            */
 /*******************************/
 
 /*****library_str******/ //str == start
@@ -49,11 +49,29 @@ ESP8266WebServer server(80);  //porta 80 é padrão para entrada e saída de dad
 String tag_now = "";
 int tag_db = 0;
 
-int tam = 2; //tam db
-String database [2] = {
-  "51 4F E2 08", "WALMOR"
+class membro_class {
+  public:
+    String UID, nome;
+
+    boolean dev = false,
+            cas = false;
+
+    membro_class(String UID_aux, String nome_aux) {
+      UID = UID_aux;
+      nome = nome_aux;
+    }
 };
 
+int tam = 26; //tam db
+membro_class membro[] = {
+  membro_class("B5 80 13 AB", "Tag azul de segurança")
+};
+
+void pessoas_especiais (){
+  //encontrar a pessoa e colocar verdadeiro nas coisas que ela faz
+  membro[0].dev = true;
+  membro[1].cas = true;
+}
 
 String tag_backup[32] = ""; //codigo da tag
 int tag_db_backup[32];      //posicao da tag
@@ -71,7 +89,7 @@ void handleRoot (){
       textHTML += " <meta http-equiv='refresh' content='3'>";
       textHTML += "<title>ESP8266 Server</title>";
       textHTML += "<style>";
-        textHTML += "body{background-color: rgb(235, 235, 245, 100);}";
+        textHTML += "body{background-color: #efefef;}";
       textHTML += "</style>";
     textHTML += "</head>";
 
@@ -85,7 +103,7 @@ void handleRoot (){
         textHTML += ", ";
 
         if(tag_y_db_backup[i] == 1){
-        textHTML += database[tag_db_backup[i] + 1];
+        textHTML += membro[tag_db_backup[i]].nome;
         textHTML += "<br>";
         }
         else{
@@ -190,6 +208,8 @@ void go_in_DEV (){ //efeito diferenciado de entrada (go_in_DEV) para developer
   delay(100);
   digitalWrite(GRE_LED, LOW);
   digitalWrite(RED_LED, LOW);
+
+  Serial.println("developer");
 }
 
 void donot_go_in (){ //tag nao cadastrada
@@ -219,8 +239,11 @@ void donot_go_in (){ //tag nao cadastrada
 }
 
 void up_firebase (String tag, boolean go_db){ //enviar as tag para firebase
+  //desativado pois o rotiador próprio do ramo não está conectando a internet
+
+  Serial.println("------------------");
   if(go_db)
-    Firebase.pushString("tag_read", tag + ", " + database[tag_db_backup[0] + 1]);
+    Firebase.pushString("tag_read", tag + ", "); //+ name); falta o nome da pessoa
   else
     Firebase.pushString("tag_read", tag + ", " + "unknown");
 
@@ -231,6 +254,7 @@ void up_firebase (String tag, boolean go_db){ //enviar as tag para firebase
 
   Serial.print("firebase: tag now: ");
   Serial.println(tag);
+  Serial.println("------------------");
 }
 
 void function_RFID (){
@@ -255,7 +279,6 @@ void function_RFID (){
      conteudo.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
      conteudo.concat(String(mfrc522.uid.uidByte[i], HEX));
   }
-  //Serial.println();
   conteudo.toUpperCase();
 
   if (conteudo.substring(1) == "01 D1 FC 52" || "03 1C A0 F6"){ //??
@@ -265,19 +288,17 @@ void function_RFID (){
       tag_y_db_backup [i] = tag_y_db_backup [i - 1];
     }
 
-    boolean go = false; //var aux
+    boolean go = false; //var aux para seber se a tag esta no db
     tag_now = conteudo.substring(1);
 
     tag_backup[0] = tag_now;
     Serial.println(tag_now);
 
     for(int i = 0; i < tam; i++){
-      if (database[i] == tag_now){
+      if (membro[i].UID == tag_now){
         Serial.println("Yes db");
 
-        if ((database[i + 1] == "wesley") || //quem são os developer ?
-            (database[i + 1] == "Walmor") ||
-            (database[i + 1] == "Dalila"))
+        if (membro[i].dev) //eh developer
           go_in_DEV();
 
         else
@@ -299,11 +320,13 @@ void function_RFID (){
     }
 
     up_firebase(tag_now, go); //envia a tag para firebase
-    go = false;
+    go = !go;
   }
 }
 
 void setup (){
+  pessoas_especiais();
+
   /************************/
   pinMode(GRE_LED, OUTPUT);
   pinMode(RED_LED, OUTPUT);
@@ -353,7 +376,7 @@ void setup (){
 void loop (){
   mfrc522.PCD_Init();
   mfrc522.PCD_SetAntennaGain(mfrc522.RxGain_max);
-  delay(50);
+  delay(25);
 
   if (analogRead(button) >= 1000){ //se o botão foi presionado. Isso significa que tem gente dentro do ramo querendo sair
     go_in(); //abrir a porta
@@ -370,7 +393,8 @@ void loop (){
     Serial.println("button pressed");
     up_firebase("button pressed", false);
 
-    Serial.print("IP address: "); //mostrar qual o IP do esp na porta serial. para develo
+    /*********/
+    Serial.print("IP address: "); //mostrar qual o IP do esp na porta serial. para developer
     Serial.println(WiFi.localIP());
   }
 
