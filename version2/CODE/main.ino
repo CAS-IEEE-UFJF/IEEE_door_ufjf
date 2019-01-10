@@ -87,6 +87,7 @@ void handleRoot (){
   textHTML += "<html>";
     textHTML += "<head>";
       textHTML += " <meta http-equiv='refresh' content='3'>";
+      textHTML += "<meta name'viewport' content='width=device-width, initial-scale=1.0'>";
       textHTML += "<title>ESP8266 Server</title>";
       textHTML += "<style>";
         textHTML += "body{background-color: #efefef;}";
