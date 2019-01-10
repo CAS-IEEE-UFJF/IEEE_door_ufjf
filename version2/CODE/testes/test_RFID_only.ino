@@ -4,7 +4,7 @@
 #define RST_PIN 4  //GPIO4 ou D2 no nodeMCU, RST no RFID
 
 //do protocolo SPI
-#define SS_PIN  5  //GPIO4 ou D1 no nodeMCU, SDA no RFID  
+#define SS_PIN  5  //GPIO5 ou D1 no nodeMCU, SDA no RFID  
                    //GPIO12 ou D6 no nodeMCU, MISO no RFID
                    //GPIO13 ou D7 no nodeMCU, MOSI no RFID
                    //GPIO14 ou D5 no nodeMCU, SCK no RFID

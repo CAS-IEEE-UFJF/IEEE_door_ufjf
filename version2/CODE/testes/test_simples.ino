@@ -1,19 +1,28 @@
-/*//only test
+//only test
+//faz leitura das tag, acende LEDs, buzzer, botão e move o motor. Não tem firebase ou servidor
 #include <Arduino.h>
 
 #include <SPI.h>
 #include <MFRC522.h>
-#define RST_PIN    5
-#define SS_PIN     15
+
+#define RST_PIN 4  //GPIO4 ou D2 no nodeMCU, RST no RFID
+
+//do protocolo SPI
+#define SS_PIN  5  //GPIO5 ou D1 no nodeMCU, SDA no RFID
+                   //GPIO12 ou D6 no nodeMCU, MISO no RFID
+                   //GPIO13 ou D7 no nodeMCU, MOSI no RFID
+                   //GPIO14 ou D5 no nodeMCU, SCK no RFID
 MFRC522 mfrc522(SS_PIN, RST_PIN); // Create MFRC522 instance
 
-#define RED_LED D4
-#define GRE_LED D3
-#define BUZZER  D2
+#define RED_LED 3 //GPIO3 ou RX se funcionar. Se não funcionar, usar os pinos do led junto com os dos motores (UP_ENG e DOWN_ENG)
+#define GRE_LED 15  //GPIO15 ou D8
+#define BUZZER 16 //GPIO16 ou D0
 const int button = A0;
 
-const int UP_ENG = D9;
-const int DOWN_ENG = D0;
+#define UP_ENG 0;   //GPIO0 ou D3
+#define DOWN_ENG 2; //GPIO2 ou D4
+
+//esse problema de falta de portas é corrigido usando contador(está dentro de itens  adicionais no github)
 
 void efeito (){
   digitalWrite(GRE_LED, HIGH);
@@ -81,4 +90,3 @@ void loop (){
     Serial.println("push button");
   }
 }
-*/

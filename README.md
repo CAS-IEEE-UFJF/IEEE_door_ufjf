@@ -1,4 +1,4 @@
-# [ 2º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version2)
+## [ 2º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version2)
 ### Apresentação
 
 O Ramo Estudantil IEEE devido ao seu grande número de membros, necessitava de um melhor controle de acesso ao seu domínio. Porém, as trancas convencionais demandam cópias de chave e não havia como saber quem entrou e em qual horário. A partir disso fizemos um levantamento de qual seria a melhor proposta para resolver o controle de acesso ao tempo que pudéssemos gerenciar as chaves. Em nosso levantamento descobrimos que as carteirinhas estudantis possuíam um dispositivo interno para identificação chamado de radiofrequência chamado RFID, elas por sua vez, são chaves únicas e podem ser obtidas através de leitura.
@@ -27,8 +27,12 @@ Quando uma pessoa aproxima sua carteirinha do equipamento, o RFID - RC522 é o s
 ##### * foto:
 ![](https://github.com/wesley-cantarino/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG.png)
 
+![](https://github.com/wesley-cantarino/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_esp.png)
+
+![](https://github.com/wesley-cantarino/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_rfid.png)
+
 ##### * flowchart:
 ![](https://github.com/wesley-cantarino/IEEE_door_ufjf/blob/master/version2/flowchart_IMG.jpeg)
 
-# [ 1º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version1)
+## [ 1º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version1)
 Objetivo da 1º versão é apresentar para a equipe o Arduino e desenvolver a capacidade de programação.
