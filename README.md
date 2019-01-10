@@ -27,9 +27,9 @@ Quando uma pessoa aproxima sua carteirinha do equipamento, o RFID - RC522 é o s
 ##### * foto:
 ![](https://github.com/wesley-cantarino/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG.png)
 
-![](https://github.com/wesley-cantarino/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_esp.png)
+![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_rfid.png)
 
-![](https://github.com/wesley-cantarino/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_rfid.png)
+![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_esp.png)
 
 ##### * flowchart:
 ![](https://github.com/wesley-cantarino/IEEE_door_ufjf/blob/master/version2/flowchart_IMG.jpeg)
