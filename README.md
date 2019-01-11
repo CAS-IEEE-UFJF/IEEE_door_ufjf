@@ -1,3 +1,5 @@
+![](https://img.shields.io/badge/build-passing-rgb(76%2C198%2C31).svg)
+
 ## [ 2º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version2)
 ### Apresentação
 
