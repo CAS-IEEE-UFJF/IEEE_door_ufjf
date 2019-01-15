@@ -9,6 +9,11 @@ O Ramo Estudantil IEEE devido ao seu grande número de membros, necessitava de u
 
 O projeto Porta Tunada 2.0 consiste em um equipamento eficiente e de baixo custo para controlar a entrada e saída de pessoas na sala do Ramo Estudantil IEEE UFJF, estando restrito o acesso somente aos membros que tenham suas carteirinhas estudantis cadastradas. Nessa 2º versão fomentamos a equipe o uso do nodeMCU (ESP8266) e para desenvolver a capacidade de programação em IOT.
 
+
+### Descrição do funcionamento:
+
+Quando uma pessoa aproxima sua carteirinha do equipamento, o RFID - RC522 é o sensor que faz a leitura da tag da carteirinha aproximada. O ESP8266 recebe essa informação e permite que o motor abra a porta, somente se, a mesma for reconhecida. E, então, o LED verde acende e o motor é acionado abrindo a porta. Caso contrário, o buzzer emite um som e o LED vermelho acende. A fonte é utilizada para alimentar o circuito, a ponte H controla o movimento do motor e os jumpers fazem a ligação entre os componentes.
+
 ### Componentes utilizados:
 
 * Fonte de 12V;
@@ -21,9 +26,46 @@ O projeto Porta Tunada 2.0 consiste em um equipamento eficiente e de baixo custo
 * Buzzer;
 * Jumpers.
 
-### Descrição do funcionamento:
+### Files
 
-Quando uma pessoa aproxima sua carteirinha do equipamento, o RFID - RC522 é o sensor que faz a leitura da tag da carteirinha aproximada. O ESP8266 recebe essa informação e permite que o motor abra a porta, somente se, a mesma for reconhecida. E, então, o LED verde acende e o motor é acionado abrindo a porta. Caso contrário, o buzzer emite um som e o LED vermelho acende. A fonte é utilizada para alimentar o circuito, a ponte H controla o movimento do motor e os jumpers fazem a ligação entre os componentes.
+```
+.
+|--- item_adicionais
+     |--- contador
+          |--- contador.ino
+          |--- esquematico_IMG.jpg
+          |--- esquematico_fritzing.fzz
+          |--- sn74hc595-datasheet.pdf
+          |--- video_01.mp4
+          |--- video_02.mp4
+     |--- matriz_numerica
+          |--- library
+               |--- keypad.zip
+          |--- ZRX_543.jpg
+          |--- matriz_numerica.ino
+     |--- readme.md
+|--- version1
+     |--- main.ino
+|--- version2
+     |--- CODE
+          |--- library
+               |--- firebase-arduino-master.rar
+               |--- rfid-master.rar
+          |--- testes
+               |--- test_RFID_only.ino
+               |--- test_simples.ino
+               |--- textHTML_exemple.html
+          |--- main.ino
+     |--- circuito-porta.fzz
+     |--- circuito-porta_IMG.png
+     |--- circuito-porta_IMG_in_esp.png
+     |--- circuito-porta_IMG_in_rfid.png
+     |--- componentes.txt
+     |--- flowchart_IMG.jpeg
+|--- .gitignore
+|--- README.md
+|--- this_is_nodeMCU.pdf
+```
 
 
 ##### * foto:
