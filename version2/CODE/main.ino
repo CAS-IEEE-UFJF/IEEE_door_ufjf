@@ -1,17 +1,7 @@
 /*******************************/
-/*      atualizacao            */
-/*       15/01/2019            */
+/*      atualização            */
+/*       18/01/2019            */
 /*******************************/
-
-/*
- * testar efeito desenvolvedor
- * set meeting = true
- * printar: String tag_now = "";  //uid agora
-            int tag_db = 0;
-            String tag_backup[32] = ""; //código da tag
-            int tag_db_backup[32];      //posição da tag
-            int tag_y_db_backup[32];    //está no db? 
-*/
 
 /*****library_str******/ //str == start
 #include <Arduino.h> //tem que importar pois estou usando platformIO
@@ -52,8 +42,12 @@ const char* ssid = "";      //nome da rede
 const char* password = "";  //senha da rede
 */
 
-const char* ssid = "";      //nome da rede
-const char* password = "";  //senha da rede
+const char* ssid = "Wi-Fi IEEE";      //nome da rede
+const char* password = "rnr2018cg";  //senha da rede
+/*
+const char* ssid = "h'(x)";      //nome da rede
+const char* password = "T5e5L0e9C7o7M0u2N7i4C4a0C6o4E0s";  //senha da rede
+*/
 
 #define FIREBASE_HOST ""   //autenticação no firebase
 #define FIREBASE_AUTH ""
@@ -65,31 +59,58 @@ ESP8266WebServer server(80);  //porta 80 é padrão para entrada e saída de dad
 String tag_now = "";
 int tag_db = 0;
 
-class membro_class 
+class membro_class
 {
   public:
     String UID, nome;
+    boolean   dev = false; //grupos em que a pessoa está. Por padrão vem setado como falso
 
-    boolean   dev = false, //grupos em que a pessoa está. Por padrão vem setado como falso
-             pres = false, //permite iniciar reunião
-              cas = false; 
-          //coisa = false;
+    bool coisas [27] = {false};
+    /*
+       0   false, //CAS: presidente
+       1   false, //RAS: presidente
+       2   false, //PES: presidente
+       3   false, //IAS: presidente
+       4   false, //SIGHT: presidente
+       5   false, //WIE: presidente
+       6   false, //SPEAK: presidente
+       7   false, //QUALIDADE: presidente
+       8   false, //MKT: presidente
+       9   false, //EVENTOS: presidente
+       10  false, //TI: presidente
+       11  false, //CONSELHO: presidente
+       12  false, //GP: presidente
+       13  false, //PROFESSOR: presidente
 
-    membro_class(String UID_aux, String nome_aux) 
+       14  false, //CAS: membro
+       15  false, //RAS: membro
+       16  false, //PES: membro
+       17  false, //IAS: membro
+       18  false, //SIGHT: membro
+       19  false, //WIE: membro
+       20  false, //SPEAK: membro
+       21  false, //QUALIDADE: membro
+       22  false, //MKT: membro
+       23  false, //EVENTOS: membro
+       24  false, //TI: membro
+       25  false, //CONSELHO: membro
+       26  false, //GP: membro
+
+       27 no total
+  */
+
+    membro_class(String UID_aux, String nome_aux)
     {
       UID = UID_aux;
       nome = nome_aux;
     }
 };
 
-int tam = 26; //tam db //<---------- alterar aqui!!!!!!!
-membro_class membro[] = 
+int tam_DB = 26; //tam db //<---------- alterar aqui!!!!!!!
+membro_class membro[] =
 {
 
-
-  //novo usuário: membro_class("TAG", "nome"),
-
-  /*25*/ membro_class("B5 80 13 AB", "Tag azul de segurança")
+  /*26 no total*/
 };
 
 String tag_backup[32] = ""; //código da tag
@@ -97,6 +118,16 @@ int tag_db_backup[32];      //posição da tag
 int tag_y_db_backup[32];    //está no db?
 
 boolean meeting = false; //modo reunião
+int cont_meeting = 0; //contador para reunião, var aux
+int quem_ativou = 200;
+
+
+void oque_a_pessoa_faz ()
+{ //se a pessoa é desenvolvedor...
+  //encontrar a pessoa e colocar verdadeiro(true) nas coisas que ela faz
+
+
+}
 /************************/
 
 /*******server_str*******/
@@ -163,7 +194,7 @@ void handleNotFound ()
 
 void go_in ()
 { //efeito normal de entrada (go_in)
-  digitalWrite(GRE_LED, HIGH); 
+  digitalWrite(GRE_LED, HIGH);
   digitalWrite(RED_LED, LOW);
   /*************************/
 
@@ -275,12 +306,12 @@ void beep(int note, int duration)
   //Play tone on buzzerPin
   tone(BUZZER, note);
   delay(duration);
- 
+
   //Stop tone on buzzerPin
   noTone(BUZZER);
- 
+
   delay(50);
- 
+
   //Increment counter
   counter++;
 }
@@ -288,10 +319,10 @@ void beep(int note, int duration)
 void firstSection()
 {
   beep(a, 500);
-  beep(a, 500);    
+  beep(a, 500);
   beep(a, 500);
   beep(f, 350);
-  beep(cH, 150);  
+  beep(cH, 150);
   beep(a, 500);
   beep(f, 350);
   beep(cH, 150);
@@ -299,21 +330,21 @@ void firstSection()
 
   /*
   delay(500);
- 
+
   beep(eH, 500);
   beep(eH, 500);
-  beep(eH, 500);  
+  beep(eH, 500);
   beep(fH, 350);
   beep(cH, 150);
   beep(gS, 500);
   beep(f, 350);
   beep(cH, 150);
   beep(a, 650);
-  
+
   delay(500);
   */
 }
- 
+
 void secondSection()
 {
   beep(aH, 500);
@@ -323,19 +354,19 @@ void secondSection()
   beep(gSH, 325);
   beep(gH, 175);
   beep(fSH, 125);
-  beep(fH, 125);    
+  beep(fH, 125);
   beep(fSH, 250);
- 
+
   delay(325);
- 
+
   beep(aS, 250);
   beep(dSH, 500);
-  beep(dH, 325);  
-  beep(cSH, 175);  
-  beep(cH, 125);  
-  beep(b, 125);  
-  beep(cH, 250);  
- 
+  beep(dH, 325);
+  beep(cSH, 175);
+  beep(cH, 125);
+  beep(b, 125);
+  beep(cH, 250);
+
   delay(350);
 }
 
@@ -347,7 +378,7 @@ void go_in_DEV_star_wars ()
 
   //Play first section
   firstSection();
- 
+
   //Play second section
   //secondSection();
 
@@ -392,11 +423,13 @@ void donot_go_in ()
   digitalWrite(RED_LED, LOW);
 }
 
-void meeting_led () 
+void meeting_led ()
 { //piscar led vermelho para indicar que está em reunião
   digitalWrite(RED_LED, HIGH);
+  digitalWrite(GRE_LED, HIGH);
   delay(250);
   digitalWrite(RED_LED, LOW);
+  digitalWrite(GRE_LED, LOW);
   delay(100);
 }
 
@@ -410,7 +443,7 @@ void up_firebase (String tag, boolean go_db)
   else
     Firebase.pushString("tag_read", tag + ", " + "unknown");
 
-  if (Firebase.failed()) 
+  if (Firebase.failed())
   {
     Serial.print("setting /number failed:");
     Serial.println(Firebase.error());
@@ -465,20 +498,74 @@ void function_RFID ()
     if(meeting)
     {
       Serial.print("modo reuniao");
-      donot_go_in();
+
+      for (int ddb = 0; ddb < tam_DB; ddb++)
+      {//varrer db
+       if (membro[ddb].UID == tag_now)
+        {//se tiver no db
+          Serial.println("Yes db");
+
+          for(int va = 0; va < 14; va++)
+          {//varrer todos os presidentes //para desativar
+            if (membro[ddb].coisas[va])
+            {//se for presidente então cont_meeting = cont_meeting + 1
+              cont_meeting += 1;
+              go_in();
+
+              Serial.println("asjdnsajkdnkjsnf 11111111111111111");
+
+              go = true;
+            }
+          }
+
+          if(!go)
+          {
+            for (int ddbb = 0; ddbb < tam_DB; ddbb++)
+            {
+              if (membro[ddbb].coisas[quem_ativou])
+              {
+                go_in();
+                Serial.println("asjdnsajkdnkjsnf 2222222222222222222222");
+                go = true;
+              }
+            }
+          }
+        }
+      }
+
+      if(go == false)
+      {
+        donot_go_in();
+      }
+      else{
+        go = false;
+      }
     }
 
     else
     {
-      for(int i = 0; i < tam; i++)
+      for(int i = 0; i < tam_DB; i++)
       {
        if (membro[i].UID == tag_now)
         {
           Serial.println("Yes db");
 
+          for(int va = 0; va < 14; va++)
+          {//varrer todos os presidentes
+            if (membro[i].coisas[va])
+            {//se for presidente então cont_meeting = cont_meeting + 1
+              cont_meeting += 1;
+
+              if(cont_meeting > 2)
+              {
+                quem_ativou = va + 14;
+              }
+            }
+          }
+
           if (membro[i].dev) //eh developer
           {
-           if ((membro[i].UID == "FD 3C 50 C5") || //eu quero que minha entrada seja triunfal 
+           if ((membro[i].UID == "FD 3C 50 C5 w") || //eu quero que minha entrada seja triunfal
                (membro[i].UID == "51 4F E2 08"))
             {
               go_in_DEV_star_wars();
@@ -510,17 +597,9 @@ void function_RFID ()
   }
 }
 
-void pessoas_dev ()
-{ //se a pessoa é desenvolvedor...
-  //encontrar a pessoa e colocar verdadeiro(true) nas coisas que ela faz
-
-  membro[0].dev  = true; //wesley
-  membro[1].dev  = true; //walmor
-}
-
 void setup ()
 {
-  pessoas_dev();
+  oque_a_pessoa_faz();
 
   /************************/
   pinMode(GRE_LED, OUTPUT);
@@ -538,7 +617,7 @@ void setup ()
   Serial.println("");
 
   // Wait for connection
-  if (WiFi.status() != WL_CONNECTED) 
+  if (WiFi.status() != WL_CONNECTED)
   { //original era while mas if tbm funciona
     delay(200);
     Serial.print(".");
@@ -550,7 +629,7 @@ void setup ()
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  if (MDNS.begin("esp8266")) 
+  if (MDNS.begin("esp8266"))
   {
     Serial.println("MDNS responder started");
   }
@@ -597,6 +676,16 @@ void loop ()
     /*********/
     Serial.print("IP address: "); //mostrar qual o IP do esp na porta serial. para developer
     Serial.println(WiFi.localIP());
+
+    if(cont_meeting > 2)
+    {
+      meeting = !meeting;
+      cont_meeting = 0;
+    }
+
+    Serial.println(cont_meeting);
+    Serial.println("   ");
+    Serial.println(meeting);
   }
 
   else
@@ -604,6 +693,7 @@ void loop ()
     function_RFID();
     server.handleClient();
   }
+
 
   if(meeting)
   {
