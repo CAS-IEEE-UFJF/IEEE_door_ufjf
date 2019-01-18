@@ -1,7 +1,17 @@
 /*******************************/
 /*      atualizacao            */
-/*       10/01/2019            */
+/*       15/01/2019            */
 /*******************************/
+
+/*
+ * testar efeito desenvolvedor
+ * set meeting = true
+ * printar: String tag_now = "";  //uid agora
+            int tag_db = 0;
+            String tag_backup[32] = ""; //código da tag
+            int tag_db_backup[32];      //posição da tag
+            int tag_y_db_backup[32];    //está no db? 
+*/
 
 /*****library_str******/ //str == start
 #include <Arduino.h> //tem que importar pois estou usando platformIO
@@ -28,14 +38,20 @@
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
-#define RED_LED D4
+#define RED_LED D4 //os pinos de controle do motor também estão ligados aqui(ou seja a ponte H e os LED vermelho e verde tem na verdade o mesmo pino) pois não tem 2 pinos sobrando só para eles
 #define GRE_LED D3
+
 #define BUZZER  D2
 
 const int button = A0;
 /************************/
 
 /************************/
+/*
+const char* ssid = "";      //nome da rede
+const char* password = "";  //senha da rede
+*/
+
 const char* ssid = "";      //nome da rede
 const char* password = "";  //senha da rede
 
@@ -49,38 +65,43 @@ ESP8266WebServer server(80);  //porta 80 é padrão para entrada e saída de dad
 String tag_now = "";
 int tag_db = 0;
 
-class membro_class {
+class membro_class 
+{
   public:
     String UID, nome;
 
-    boolean dev = false,
-            cas = false;
+    boolean   dev = false, //grupos em que a pessoa está. Por padrão vem setado como falso
+             pres = false, //permite iniciar reunião
+              cas = false; 
+          //coisa = false;
 
-    membro_class(String UID_aux, String nome_aux) {
+    membro_class(String UID_aux, String nome_aux) 
+    {
       UID = UID_aux;
       nome = nome_aux;
     }
 };
 
-int tam = 26; //tam db
-membro_class membro[] = {
-  membro_class("B5 80 13 AB", "Tag azul de segurança")
+int tam = 26; //tam db //<---------- alterar aqui!!!!!!!
+membro_class membro[] = 
+{
+
+
+  //novo usuário: membro_class("TAG", "nome"),
+
+  /*25*/ membro_class("B5 80 13 AB", "Tag azul de segurança")
 };
 
-void pessoas_especiais (){
-  //encontrar a pessoa e colocar verdadeiro nas coisas que ela faz
-  membro[0].dev = true;
-  membro[1].cas = true;
-}
-
-String tag_backup[32] = ""; //codigo da tag
-int tag_db_backup[32];      //posicao da tag
+String tag_backup[32] = ""; //código da tag
+int tag_db_backup[32];      //posição da tag
 int tag_y_db_backup[32];    //está no db?
+
+boolean meeting = false; //modo reunião
 /************************/
 
 /*******server_str*******/
-void handleRoot (){
-  //html mega complexo...hahaha
+void handleRoot ()
+{//html mega complexo...hahaha
   String textHTML;
 
   textHTML += "<!DOCTYPE HTML>";
@@ -99,15 +120,18 @@ void handleRoot (){
       textHTML += "<h1>TAG</h1>";
 
       /************************/
-      for(int i = 0; i < 32; i++){
-        textHTML += tag_backup[i];
+      for(int i = 0; i < 32; i++)
+      {
+        textHTML += tag_backup[i]; //UID
         textHTML += ", ";
 
-        if(tag_y_db_backup[i] == 1){
+        if(tag_y_db_backup[i] == 1)
+        {
         textHTML += membro[tag_db_backup[i]].nome;
         textHTML += "<br>";
         }
-        else{
+        else
+        {
           textHTML += "unknown<br>";
         }
       }
@@ -119,7 +143,8 @@ void handleRoot (){
   server.send(200, "text/html", textHTML);
 }
 
-void handleNotFound (){
+void handleNotFound ()
+{
   String message = "File Not Found\n\n";
   message += "URI: ";
   message += server.uri();
@@ -128,16 +153,19 @@ void handleNotFound (){
   message += "\nArguments: ";
   message += server.args();
   message += "\n";
-  for (uint8_t i=0; i<server.args(); i++){
+  for (uint8_t i=0; i<server.args(); i++)
+  {
     message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
   }
   server.send(404, "text/plain", message);
 }
 /*******server_end*******/
 
-void go_in (){ //efeito normal de entrada (go_in)
-  digitalWrite(GRE_LED, HIGH);
+void go_in ()
+{ //efeito normal de entrada (go_in)
+  digitalWrite(GRE_LED, HIGH); 
   digitalWrite(RED_LED, LOW);
+  /*************************/
 
   tone(BUZZER, 294);
   delay(100);
@@ -159,6 +187,7 @@ void go_in (){ //efeito normal de entrada (go_in)
   delay(180);
   noTone(BUZZER);
 
+  /*************************/
   delay(500); //delay here
   digitalWrite(GRE_LED, LOW);
   digitalWrite(RED_LED, LOW);
@@ -171,9 +200,11 @@ void go_in (){ //efeito normal de entrada (go_in)
   digitalWrite(RED_LED, LOW);
 }
 
-void go_in_DEV (){ //efeito diferenciado de entrada (go_in_DEV) para developer
+void go_in_DEV ()
+{ //efeito diferenciado de entrada (go_in_DEV) para developer
   digitalWrite(GRE_LED, HIGH);
   digitalWrite(RED_LED, LOW);
+  /*************************/
 
   tone(BUZZER, 294);
   delay(100);
@@ -200,6 +231,7 @@ void go_in_DEV (){ //efeito diferenciado de entrada (go_in_DEV) para developer
   delay(180);
   noTone(BUZZER);
 
+  /*************************/
   delay(500); //delay here
   digitalWrite(GRE_LED, LOW);
   digitalWrite(RED_LED, LOW);
@@ -213,7 +245,128 @@ void go_in_DEV (){ //efeito diferenciado de entrada (go_in_DEV) para developer
   Serial.println("developer");
 }
 
-void donot_go_in (){ //tag nao cadastrada
+
+/******************************/
+//minha música de star wars hehe
+const int c = 261;
+const int d = 294;
+const int e = 329;
+const int f = 349;
+const int g = 391;
+const int gS = 415;
+const int a = 440;
+const int aS = 455;
+const int b = 466;
+const int cH = 523;
+const int cSH = 554;
+const int dH = 587;
+const int dSH = 622;
+const int eH = 659;
+const int fH = 698;
+const int fSH = 740;
+const int gH = 784;
+const int gSH = 830;
+const int aH = 880;
+
+int counter = 0;
+
+void beep(int note, int duration)
+{
+  //Play tone on buzzerPin
+  tone(BUZZER, note);
+  delay(duration);
+ 
+  //Stop tone on buzzerPin
+  noTone(BUZZER);
+ 
+  delay(50);
+ 
+  //Increment counter
+  counter++;
+}
+
+void firstSection()
+{
+  beep(a, 500);
+  beep(a, 500);    
+  beep(a, 500);
+  beep(f, 350);
+  beep(cH, 150);  
+  beep(a, 500);
+  beep(f, 350);
+  beep(cH, 150);
+  beep(a, 650);
+
+  /*
+  delay(500);
+ 
+  beep(eH, 500);
+  beep(eH, 500);
+  beep(eH, 500);  
+  beep(fH, 350);
+  beep(cH, 150);
+  beep(gS, 500);
+  beep(f, 350);
+  beep(cH, 150);
+  beep(a, 650);
+  
+  delay(500);
+  */
+}
+ 
+void secondSection()
+{
+  beep(aH, 500);
+  beep(a, 300);
+  beep(a, 150);
+  beep(aH, 500);
+  beep(gSH, 325);
+  beep(gH, 175);
+  beep(fSH, 125);
+  beep(fH, 125);    
+  beep(fSH, 250);
+ 
+  delay(325);
+ 
+  beep(aS, 250);
+  beep(dSH, 500);
+  beep(dH, 325);  
+  beep(cSH, 175);  
+  beep(cH, 125);  
+  beep(b, 125);  
+  beep(cH, 250);  
+ 
+  delay(350);
+}
+
+void go_in_DEV_star_wars ()
+{
+  digitalWrite(GRE_LED, HIGH);
+  digitalWrite(RED_LED, LOW);
+  /*************************/
+
+  //Play first section
+  firstSection();
+ 
+  //Play second section
+  //secondSection();
+
+  /*************************/
+  digitalWrite(GRE_LED, LOW);
+  digitalWrite(RED_LED, LOW);
+
+  digitalWrite(GRE_LED, LOW);
+  digitalWrite(RED_LED, HIGH);
+  delay(100);
+  digitalWrite(GRE_LED, LOW);
+  digitalWrite(RED_LED, LOW);
+
+  Serial.println("developer");
+}
+/******************************/
+
+void donot_go_in ()
+{ //tag nao cadastrada
   digitalWrite(RED_LED, HIGH);
 
   tone(BUZZER, 523);
@@ -239,8 +392,17 @@ void donot_go_in (){ //tag nao cadastrada
   digitalWrite(RED_LED, LOW);
 }
 
-void up_firebase (String tag, boolean go_db){ //enviar as tag para firebase
-  //desativado pois o rotiador próprio do ramo não está conectando a internet
+void meeting_led () 
+{ //piscar led vermelho para indicar que está em reunião
+  digitalWrite(RED_LED, HIGH);
+  delay(250);
+  digitalWrite(RED_LED, LOW);
+  delay(100);
+}
+
+void up_firebase (String tag, boolean go_db)
+{ //enviar as tag para firebase
+  //desativado pois o roteador próprio do ramo não está conectando a internet
 
   Serial.println("------------------");
   if(go_db)
@@ -248,9 +410,10 @@ void up_firebase (String tag, boolean go_db){ //enviar as tag para firebase
   else
     Firebase.pushString("tag_read", tag + ", " + "unknown");
 
-  if (Firebase.failed()) {
-      Serial.print("setting /number failed:");
-      Serial.println(Firebase.error());
+  if (Firebase.failed()) 
+  {
+    Serial.print("setting /number failed:");
+    Serial.println(Firebase.error());
   }
 
   Serial.print("firebase: tag now: ");
@@ -258,7 +421,8 @@ void up_firebase (String tag, boolean go_db){ //enviar as tag para firebase
   Serial.println("------------------");
 }
 
-void function_RFID (){
+void function_RFID ()
+{
   /*essa funcao faz leitura do RFID e verifica
     se a tag esta no banco de dados. se sim, chama
     a funcao go_in ou go_in_DEV se for tag especial(developer)
@@ -276,14 +440,17 @@ void function_RFID (){
   //Mostra UID na serial
   //Serial.print("UID da tag :");
   String conteudo= "";
-  for (byte i = 0; i < mfrc522.uid.size; i++){
-     conteudo.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
-     conteudo.concat(String(mfrc522.uid.uidByte[i], HEX));
+  for (byte i = 0; i < mfrc522.uid.size; i++)
+  {
+    conteudo.concat(String(mfrc522.uid.uidByte[i] < 0x10 ? " 0" : " "));
+    conteudo.concat(String(mfrc522.uid.uidByte[i], HEX));
   }
   conteudo.toUpperCase();
 
-  if (conteudo.substring(1) == "01 D1 FC 52" || "03 1C A0 F6"){ //??
-    for(int i = 31; i > 0; i--){
+  if (conteudo.substring(1) == "01 D1 FC 52" || "03 1C A0 F6")
+  { //não sei o motivo de ser entre esses dois valores
+    for(int i = 31; i > 0; i--)
+    {
       tag_backup [i] = tag_backup [i - 1];
       tag_db_backup [i] = tag_db_backup [i - 1];
       tag_y_db_backup [i] = tag_y_db_backup [i - 1];
@@ -295,38 +462,65 @@ void function_RFID (){
     tag_backup[0] = tag_now;
     Serial.println(tag_now);
 
-    for(int i = 0; i < tam; i++){
-      if (membro[i].UID == tag_now){
-        Serial.println("Yes db");
-
-        if (membro[i].dev) //eh developer
-          go_in_DEV();
-
-        else
-          go_in();
-
-        tag_db_backup[0] = i;
-
-        go = true;
-
-        tag_y_db_backup[0] = 1;
-      }
-    }
-
-    if (!go){
+    if(meeting)
+    {
+      Serial.print("modo reuniao");
       donot_go_in();
-      Serial.println("No db");
-
-      tag_y_db_backup[0] = 0;
     }
 
-    up_firebase(tag_now, go); //envia a tag para firebase
-    go = !go;
+    else
+    {
+      for(int i = 0; i < tam; i++)
+      {
+       if (membro[i].UID == tag_now)
+        {
+          Serial.println("Yes db");
+
+          if (membro[i].dev) //eh developer
+          {
+           if ((membro[i].UID == "FD 3C 50 C5") || //eu quero que minha entrada seja triunfal 
+               (membro[i].UID == "51 4F E2 08"))
+            {
+              go_in_DEV_star_wars();
+            }
+            else
+             go_in_DEV();
+         }
+         else
+            go_in();
+
+
+         tag_db_backup[0] = i;
+         go = true;
+         tag_y_db_backup[0] = 1;
+        }
+      }
+
+      if (!go)
+      {
+       donot_go_in();
+       Serial.println("No db");
+
+        tag_y_db_backup[0] = 0;
+      }
+
+      up_firebase(tag_now, go); //envia a tag para firebase
+      go = !go;
+    }
   }
 }
 
-void setup (){
-  pessoas_especiais();
+void pessoas_dev ()
+{ //se a pessoa é desenvolvedor...
+  //encontrar a pessoa e colocar verdadeiro(true) nas coisas que ela faz
+
+  membro[0].dev  = true; //wesley
+  membro[1].dev  = true; //walmor
+}
+
+void setup ()
+{
+  pessoas_dev();
 
   /************************/
   pinMode(GRE_LED, OUTPUT);
@@ -338,13 +532,14 @@ void setup (){
   /************************/
 
   /************************/
-  Serial.begin(115200);
+  Serial.begin(9600);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
   Serial.println("");
 
   // Wait for connection
-  if (WiFi.status() != WL_CONNECTED) { //original era while mas if tbm funciona
+  if (WiFi.status() != WL_CONNECTED) 
+  { //original era while mas if tbm funciona
     delay(200);
     Serial.print(".");
   }
@@ -355,13 +550,15 @@ void setup (){
   Serial.print("IP address: ");
   Serial.println(WiFi.localIP());
 
-  if (MDNS.begin("esp8266")) {
+  if (MDNS.begin("esp8266")) 
+  {
     Serial.println("MDNS responder started");
   }
 
   server.on("/", handleRoot);
 
-  server.on("/inline", [](){
+  server.on("/inline", []()
+  {
     server.send(200, "text/plain", "this works as well");
   });
 
@@ -374,15 +571,18 @@ void setup (){
   /************************/
 }
 
-void loop (){
+void loop ()
+{
   mfrc522.PCD_Init();
   mfrc522.PCD_SetAntennaGain(mfrc522.RxGain_max);
   delay(25);
 
-  if (analogRead(button) >= 1000){ //se o botão foi presionado. Isso significa que tem gente dentro do ramo querendo sair
+  if (analogRead(button) >= 1000)
+  { //se o botão foi presionado. Isso significa que tem gente dentro do ramo querendo sair
     go_in(); //abrir a porta
 
-    for(int i = 31; i > 0; i--){ //atualizar db
+    for(int i = 31; i > 0; i--)
+    { //atualizar db
       tag_backup [i] = tag_backup [i - 1];
       tag_db_backup [i] = tag_db_backup [i - 1];
       tag_y_db_backup [i] = tag_y_db_backup [i - 1];
@@ -399,8 +599,14 @@ void loop (){
     Serial.println(WiFi.localIP());
   }
 
-  else {
+  else
+  {
     function_RFID();
     server.handleClient();
+  }
+
+  if(meeting)
+  {
+    meeting_led();
   }
 }
