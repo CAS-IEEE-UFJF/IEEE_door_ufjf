@@ -42,8 +42,8 @@ const char* ssid = "";      //nome da rede
 const char* password = "";  //senha da rede
 */
 
-const char* ssid = "Wi-Fi IEEE";      //nome da rede
-const char* password = "rnr2018cg";  //senha da rede
+const char* ssid = "";      //nome da rede
+const char* password = "";  //senha da rede
 /*
 const char* ssid = "h'(x)";      //nome da rede
 const char* password = "T5e5L0e9C7o7M0u2N7i4C4a0C6o4E0s";  //senha da rede
@@ -110,6 +110,7 @@ int tam_DB = 26; //tam db //<---------- alterar aqui!!!!!!!
 membro_class membro[] =
 {
 
+
   /*26 no total*/
 };
 
@@ -126,6 +127,7 @@ void oque_a_pessoa_faz ()
 { //se a pessoa é desenvolvedor...
   //encontrar a pessoa e colocar verdadeiro(true) nas coisas que ela faz
 
+  //wesley
 
 }
 /************************/
@@ -512,8 +514,6 @@ void function_RFID ()
               cont_meeting += 1;
               go_in();
 
-              Serial.println("asjdnsajkdnkjsnf 11111111111111111");
-
               go = true;
             }
           }
@@ -525,7 +525,7 @@ void function_RFID ()
               if (membro[ddbb].coisas[quem_ativou])
               {
                 go_in();
-                Serial.println("asjdnsajkdnkjsnf 2222222222222222222222");
+
                 go = true;
               }
             }
@@ -565,7 +565,7 @@ void function_RFID ()
 
           if (membro[i].dev) //eh developer
           {
-           if ((membro[i].UID == "FD 3C 50 C5 w") || //eu quero que minha entrada seja triunfal
+           if ((membro[i].UID == "FD 3C 50 C5") || //eu quero que minha entrada seja triunfal
                (membro[i].UID == "51 4F E2 08"))
             {
               go_in_DEV_star_wars();
