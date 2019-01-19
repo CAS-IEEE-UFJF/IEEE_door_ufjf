@@ -1,6 +1,6 @@
 /*******************************/
 /*      atualização            */
-/*       18/01/2019            */
+/*       19/01/2019            */
 /*******************************/
 
 /*****library_str******/ //str == start
@@ -109,9 +109,6 @@ class membro_class
 int tam_DB = 26; //tam db //<---------- alterar aqui!!!!!!!
 membro_class membro[] =
 {
-
-
-  /*26 no total*/
 };
 
 String tag_backup[32] = ""; //código da tag
@@ -121,13 +118,13 @@ int tag_y_db_backup[32];    //está no db?
 boolean meeting = false; //modo reunião
 int cont_meeting = 0; //contador para reunião, var aux
 int quem_ativou = 200;
+double time_now = 0;
+double time_aux = 0;
 
 
 void oque_a_pessoa_faz ()
 { //se a pessoa é desenvolvedor...
   //encontrar a pessoa e colocar verdadeiro(true) nas coisas que ela faz
-
-  //wesley
 
 }
 /************************/
@@ -439,7 +436,7 @@ void up_firebase (String tag, boolean go_db)
 { //enviar as tag para firebase
   //desativado pois o roteador próprio do ramo não está conectando a internet
 
-  Serial.println("------------------");
+  Serial.println("-------firebase str-----------");
   if(go_db)
     Firebase.pushString("tag_read", tag + ", "); //+ name); falta o nome da pessoa
   else
@@ -453,7 +450,7 @@ void up_firebase (String tag, boolean go_db)
 
   Serial.print("firebase: tag now: ");
   Serial.println(tag);
-  Serial.println("------------------");
+  Serial.println("--------firebase end----------");
 }
 
 void function_RFID ()
@@ -499,7 +496,7 @@ void function_RFID ()
 
     if(meeting)
     {
-      Serial.print("modo reuniao");
+      Serial.println("modo reuniao");
 
       for (int ddb = 0; ddb < tam_DB; ddb++)
       {//varrer db
@@ -511,8 +508,11 @@ void function_RFID ()
           {//varrer todos os presidentes //para desativar
             if (membro[ddb].coisas[va])
             {//se for presidente então cont_meeting = cont_meeting + 1
-              cont_meeting += 1;
               go_in();
+
+              cont_meeting += 1;
+              if(cont_meeting == 1)
+                time_now = millis() - time_aux;
 
               go = true;
             }
@@ -677,7 +677,7 @@ void loop ()
     Serial.print("IP address: "); //mostrar qual o IP do esp na porta serial. para developer
     Serial.println(WiFi.localIP());
 
-    if(cont_meeting > 2)
+    if((cont_meeting > 2) && (time_now <= 10000)) //10segundos
     {
       meeting = !meeting;
       cont_meeting = 0;
@@ -699,4 +699,7 @@ void loop ()
   {
     meeting_led();
   }
+
+  if(cont_meeting == 0)
+    time_aux = millis();
 }
