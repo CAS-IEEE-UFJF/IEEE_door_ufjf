@@ -76,7 +76,7 @@ Quando uma pessoa aproxima sua carteirinha do equipamento, o RFID - RC522 é o s
 ![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_esp.png)
 
 ##### * flowchart:
-![](https://github.com/wesley-cantarino/IEEE_door_ufjf/blob/master/version2/flowchart_IMG.jpeg)
+![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/flowchart_IMG.jpeg)
 
 ## [ 1º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version1)
 Objetivo da 1º versão é apresentar para a equipe o Arduino e desenvolver a capacidade de programação.
