@@ -1,6 +1,6 @@
 /*******************************/
 /*      atualização            */
-/*       19/01/2019            */
+/*       20/01/2019            */
 /*******************************/
 
 /*****library_str******/ //str == start
@@ -42,11 +42,7 @@ const char* ssid = "";      //nome da rede
 const char* password = "";  //senha da rede
 */
 
-const char* ssid = "";      //nome da rede
-const char* password = "";  //senha da rede
-/*
-const char* ssid = "h'(x)";      //nome da rede
-const char* password = "T5e5L0e9C7o7M0u2N7i4C4a0C6o4E0s";  //senha da rede
+
 */
 
 #define FIREBASE_HOST ""   //autenticação no firebase
@@ -63,10 +59,10 @@ class membro_class
 {
   public:
     String UID, nome;
-    boolean   dev = false; //grupos em que a pessoa está. Por padrão vem setado como falso
+    boolean dev = false; //grupos em que a pessoa está. Por padrão vem setado como falso
 
     bool coisas [27] = {false};
-    /*
+    /*Conseguem iniciar modo reunião
        0   false, //CAS: presidente
        1   false, //RAS: presidente
        2   false, //PES: presidente
@@ -81,7 +77,8 @@ class membro_class
        11  false, //CONSELHO: presidente
        12  false, //GP: presidente
        13  false, //PROFESSOR: presidente
-
+	  
+	  NÃO conseguem iniciar modo reunião
        14  false, //CAS: membro
        15  false, //RAS: membro
        16  false, //PES: membro
@@ -432,6 +429,17 @@ void meeting_led ()
   delay(100);
 }
 
+void meeting_buzzer ()
+{
+  tone(BUZZER, 294);
+  delay(120);
+  noTone(BUZZER);
+
+  tone(BUZZER, 440);
+  delay(110);
+  noTone(BUZZER);
+}
+
 void up_firebase (String tag, boolean go_db)
 { //enviar as tag para firebase
   //desativado pois o roteador próprio do ramo não está conectando a internet
@@ -453,12 +461,132 @@ void up_firebase (String tag, boolean go_db)
   Serial.println("--------firebase end----------");
 }
 
+void function_main ()
+{
+  /*
+    * Essa é a função principal pois é daqui que vai ser definido oque fazer com a tag lida
+    * Verifica se esta no modo reunião.
+    * Verifica se a tag esta no banco de dados. se sim, chama a função go_in ou go_in_DEV se for tag especial(developer)
+  */
+
+  for(int i = 31; i > 0; i--)
+  {
+    tag_backup [i] = tag_backup [i - 1];
+    tag_db_backup [i] = tag_db_backup [i - 1];
+    tag_y_db_backup [i] = tag_y_db_backup [i - 1];
+  }
+
+  boolean go = false; //var aux para seber se a tag esta no db
+
+  tag_backup[0] = tag_now;
+  Serial.println(tag_now);
+
+  if(meeting)
+  {
+    Serial.println("modo reuniao");
+
+    for (int ddb = 0; ddb < tam_DB; ddb++)
+    {//varrer db
+      if (membro[ddb].UID == tag_now)
+      {//se tiver no db
+        Serial.println("Yes db");
+
+        for(int va = 0; va < 14; va++)
+        {//varrer todos os presidentes //para desativar
+          if (membro[ddb].coisas[va])
+          {//se for presidente então cont_meeting = cont_meeting + 1
+            go_in();
+
+            cont_meeting += 1;
+            if(cont_meeting == 1)
+              time_now = millis() - time_aux;
+
+            go = true;
+          }
+        }
+
+        if(!go)
+        {
+          for (int ddbb = 0; ddbb < tam_DB; ddbb++)
+          {
+            if (membro[ddbb].coisas[quem_ativou])
+            {
+              go_in();
+
+              go = true;
+            }
+          }
+        }
+      }
+    }
+
+    if(go == false)
+    {
+      donot_go_in();
+    }
+    else
+    {
+      go = false;
+    }
+  }
+
+  else
+  {
+    for(int i = 0; i < tam_DB; i++)
+    {
+      if (membro[i].UID == tag_now)
+      {
+        Serial.println("Yes db");
+
+        for(int va = 0; va < 14; va++)
+        {//varrer todos os presidentes
+          if (membro[i].coisas[va])
+          {//se for presidente então cont_meeting = cont_meeting + 1
+            cont_meeting += 1;
+
+            if(cont_meeting > 2)
+            {
+              quem_ativou = va + 14;
+            }
+          }
+        }
+
+        if (membro[i].dev) //eh developer
+        {
+          if ((membro[i].UID == "FD 3C 50 C5") || //eu quero que minha entrada seja triunfal
+              (membro[i].UID == "51 4F E2 08"))
+          {
+            go_in_DEV_star_wars();
+          }
+          else
+            go_in_DEV();
+        }
+        else
+          go_in();
+
+
+        tag_db_backup[0] = i;
+        go = true;
+        tag_y_db_backup[0] = 1;
+      }
+    }
+
+    if (!go)
+    {
+      donot_go_in();
+      Serial.println("No db");
+
+      tag_y_db_backup[0] = 0;
+    }
+
+    up_firebase(tag_now, go); //envia a tag para firebase
+    go = !go;
+  }
+}
+
 void function_RFID ()
 {
-  /*essa funcao faz leitura do RFID e verifica
-    se a tag esta no banco de dados. se sim, chama
-    a funcao go_in ou go_in_DEV se for tag especial(developer)
-  */
+  /*essa função faz leitura do RFID*/
   //é confuso mas funciona
 
   // Procura por cartao RFID
@@ -481,119 +609,9 @@ void function_RFID ()
 
   if (conteudo.substring(1) == "01 D1 FC 52" || "03 1C A0 F6")
   { //não sei o motivo de ser entre esses dois valores
-    for(int i = 31; i > 0; i--)
-    {
-      tag_backup [i] = tag_backup [i - 1];
-      tag_db_backup [i] = tag_db_backup [i - 1];
-      tag_y_db_backup [i] = tag_y_db_backup [i - 1];
-    }
-
-    boolean go = false; //var aux para seber se a tag esta no db
     tag_now = conteudo.substring(1);
 
-    tag_backup[0] = tag_now;
-    Serial.println(tag_now);
-
-    if(meeting)
-    {
-      Serial.println("modo reuniao");
-
-      for (int ddb = 0; ddb < tam_DB; ddb++)
-      {//varrer db
-       if (membro[ddb].UID == tag_now)
-        {//se tiver no db
-          Serial.println("Yes db");
-
-          for(int va = 0; va < 14; va++)
-          {//varrer todos os presidentes //para desativar
-            if (membro[ddb].coisas[va])
-            {//se for presidente então cont_meeting = cont_meeting + 1
-              go_in();
-
-              cont_meeting += 1;
-              if(cont_meeting == 1)
-                time_now = millis() - time_aux;
-
-              go = true;
-            }
-          }
-
-          if(!go)
-          {
-            for (int ddbb = 0; ddbb < tam_DB; ddbb++)
-            {
-              if (membro[ddbb].coisas[quem_ativou])
-              {
-                go_in();
-
-                go = true;
-              }
-            }
-          }
-        }
-      }
-
-      if(go == false)
-      {
-        donot_go_in();
-      }
-      else{
-        go = false;
-      }
-    }
-
-    else
-    {
-      for(int i = 0; i < tam_DB; i++)
-      {
-       if (membro[i].UID == tag_now)
-        {
-          Serial.println("Yes db");
-
-          for(int va = 0; va < 14; va++)
-          {//varrer todos os presidentes
-            if (membro[i].coisas[va])
-            {//se for presidente então cont_meeting = cont_meeting + 1
-              cont_meeting += 1;
-
-              if(cont_meeting > 2)
-              {
-                quem_ativou = va + 14;
-              }
-            }
-          }
-
-          if (membro[i].dev) //eh developer
-          {
-           if ((membro[i].UID == "FD 3C 50 C5") || //eu quero que minha entrada seja triunfal
-               (membro[i].UID == "51 4F E2 08"))
-            {
-              go_in_DEV_star_wars();
-            }
-            else
-             go_in_DEV();
-         }
-         else
-            go_in();
-
-
-         tag_db_backup[0] = i;
-         go = true;
-         tag_y_db_backup[0] = 1;
-        }
-      }
-
-      if (!go)
-      {
-       donot_go_in();
-       Serial.println("No db");
-
-        tag_y_db_backup[0] = 0;
-      }
-
-      up_firebase(tag_now, go); //envia a tag para firebase
-      go = !go;
-    }
+    function_main();
   }
 }
 
@@ -677,14 +695,17 @@ void loop ()
     Serial.print("IP address: "); //mostrar qual o IP do esp na porta serial. para developer
     Serial.println(WiFi.localIP());
 
-    if((cont_meeting > 2) && (time_now <= 10000)) //10segundos
+    if((cont_meeting > 2) && (time_now <= 20000)) //20segundos
     {
       meeting = !meeting;
       cont_meeting = 0;
+
+      if(meeting)
+        meeting_buzzer();  //efeito sonoro para indicar que entrou no modo reunião
     }
 
-    Serial.println(cont_meeting);
-    Serial.println("   ");
+    Serial.print(cont_meeting);
+    Serial.print("   ");
     Serial.println(meeting);
   }
 
