@@ -1,6 +1,6 @@
 /*******************************/
 /*      atualização            */
-/*       20/01/2019            */
+/*       24/01/2019            */
 /*******************************/
 
 /*****library_str******/ //str == start
@@ -42,7 +42,11 @@ const char* ssid = "";      //nome da rede
 const char* password = "";  //senha da rede
 */
 
-
+const char* ssid = "W";      //nome da rede
+const char* password = "r";  //senha da rede
+/*
+const char* ssid = "h";      //nome da rede
+const char* password = "";  //senha da rede
 */
 
 #define FIREBASE_HOST ""   //autenticação no firebase
@@ -104,8 +108,13 @@ class membro_class
 };
 
 int tam_DB = 26; //tam db //<---------- alterar aqui!!!!!!!
+                 //se sizeof(membro)/*tam_DB*/ funcionar... então não precisa mais alterar
 membro_class membro[] =
 {
+  
+  /*24*/ membro_class("B5 80 13 AB", "Tag azul de segurança")
+
+  /*25 no total*/
 };
 
 String tag_backup[32] = ""; //código da tag
@@ -123,7 +132,7 @@ void oque_a_pessoa_faz ()
 { //se a pessoa é desenvolvedor...
   //encontrar a pessoa e colocar verdadeiro(true) nas coisas que ela faz
 
-}
+ 
 /************************/
 
 /*******server_str*******/
@@ -485,7 +494,7 @@ void function_main ()
   {
     Serial.println("modo reuniao");
 
-    for (int ddb = 0; ddb < tam_DB; ddb++)
+    for (int ddb = 0; ddb < sizeof(membro)/*tam_DB*/; ddb++)
     {//varrer db
       if (membro[ddb].UID == tag_now)
       {//se tiver no db
@@ -495,7 +504,10 @@ void function_main ()
         {//varrer todos os presidentes //para desativar
           if (membro[ddb].coisas[va])
           {//se for presidente então cont_meeting = cont_meeting + 1
-            go_in();
+
+            //okk isso aqui é para impedir de chamar go_in() mais de 1 vez !!!!!!!!!!!
+            if(!go)
+              go_in();
 
             cont_meeting += 1;
             if(cont_meeting == 1)
@@ -507,11 +519,13 @@ void function_main ()
 
         if(!go)
         {
-          for (int ddbb = 0; ddbb < tam_DB; ddbb++)
+          for (int ddbb = 0; ddbb < sizeof(membro)/*tam_DB*/; ddbb++)
           {
             if (membro[ddbb].coisas[quem_ativou])
             {
-              go_in();
+              //okk isso aqui é para impedir de chamar go_in() mais de 1 vez !!!!!!!!!!!
+              if(!go)
+                go_in();
 
               go = true;
             }
@@ -520,7 +534,7 @@ void function_main ()
       }
     }
 
-    if(go == false)
+    if(!go) //!false == true 
     {
       donot_go_in();
     }
@@ -532,7 +546,7 @@ void function_main ()
 
   else
   {
-    for(int i = 0; i < tam_DB; i++)
+    for(int i = 0; i < sizeof(membro)/*tam_DB*/; i++)
     {
       if (membro[i].UID == tag_now)
       {
@@ -702,6 +716,11 @@ void loop ()
 
       if(meeting)
         meeting_buzzer();  //efeito sonoro para indicar que entrou no modo reunião
+    }
+
+    if(cont_meeting > 20000) //20s
+    {
+      cont_meeting = 0;
     }
 
     Serial.print(cont_meeting);
