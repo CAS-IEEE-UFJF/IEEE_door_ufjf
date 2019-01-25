@@ -1,7 +1,8 @@
-/*******************************/
-/*      atualização            */
-/*       24/01/2019            */
-/*******************************/
+/***************************************************************/
+/*        ATUALIZAÇÕES                  UPLOAD nodeMCU         */
+/*     25/01/2019 08:00                25/01/2019 18:00        */
+/*                                                             */
+/***************************************************************/
 
 /*****library_str******/ //str == start
 #include <Arduino.h> //tem que importar pois estou usando platformIO
@@ -42,8 +43,8 @@ const char* ssid = "";      //nome da rede
 const char* password = "";  //senha da rede
 */
 
-const char* ssid = "W";      //nome da rede
-const char* password = "r";  //senha da rede
+const char* ssid = "";      //nome da rede
+const char* password = "";  //senha da rede
 /*
 const char* ssid = "h";      //nome da rede
 const char* password = "";  //senha da rede
@@ -56,6 +57,8 @@ ESP8266WebServer server(80);  //porta 80 é padrão para entrada e saída de dad
 /************************/
 
 /************************/
+boolean print_DEV = true;
+
 String tag_now = "";
 int tag_db = 0;
 
@@ -81,7 +84,7 @@ class membro_class
        11  false, //CONSELHO: presidente
        12  false, //GP: presidente
        13  false, //PROFESSOR: presidente
-	  
+
 	  NÃO conseguem iniciar modo reunião
        14  false, //CAS: membro
        15  false, //RAS: membro
@@ -107,14 +110,12 @@ class membro_class
     }
 };
 
-int tam_DB = 26; //tam db //<---------- alterar aqui!!!!!!!
-                 //se sizeof(membro)/*tam_DB*/ funcionar... então não precisa mais alterar
+int tam_DB = 25; //tam db //<---------- alterar aqui!!!!!!!
 membro_class membro[] =
 {
-  
-  /*24*/ membro_class("B5 80 13 AB", "Tag azul de segurança")
 
-  /*25 no total*/
+
+    /*25 no total*/
 };
 
 String tag_backup[32] = ""; //código da tag
@@ -278,7 +279,8 @@ void go_in_DEV ()
   digitalWrite(GRE_LED, LOW);
   digitalWrite(RED_LED, LOW);
 
-  Serial.println("developer");
+  if(print_DEV)
+    Serial.println("developer");
 }
 
 
@@ -397,7 +399,8 @@ void go_in_DEV_star_wars ()
   digitalWrite(GRE_LED, LOW);
   digitalWrite(RED_LED, LOW);
 
-  Serial.println("developer");
+  if(print_DEV)
+    Serial.println("developer");
 }
 /******************************/
 
@@ -453,7 +456,9 @@ void up_firebase (String tag, boolean go_db)
 { //enviar as tag para firebase
   //desativado pois o roteador próprio do ramo não está conectando a internet
 
-  Serial.println("-------firebase str-----------");
+  if(print_DEV)
+    Serial.println("-------firebase str-----------");
+
   if(go_db)
     Firebase.pushString("tag_read", tag + ", "); //+ name); falta o nome da pessoa
   else
@@ -461,13 +466,19 @@ void up_firebase (String tag, boolean go_db)
 
   if (Firebase.failed())
   {
-    Serial.print("setting /number failed:");
-    Serial.println(Firebase.error());
+    if(print_DEV)
+    {
+      Serial.print("setting /number failed:");
+      Serial.println(Firebase.error());
+    }
   }
 
-  Serial.print("firebase: tag now: ");
-  Serial.println(tag);
-  Serial.println("--------firebase end----------");
+  if(print_DEV)
+  {
+    Serial.print("firebase: tag now: ");
+    Serial.println(tag);
+    Serial.println("--------firebase end----------");
+  }
 }
 
 void function_main ()
@@ -488,24 +499,31 @@ void function_main ()
   boolean go = false; //var aux para seber se a tag esta no db
 
   tag_backup[0] = tag_now;
-  Serial.println(tag_now);
+
+  if(print_DEV)
+    Serial.println(tag_now);
 
   if(meeting)
   {
-    Serial.println("modo reuniao");
+    if(print_DEV)
+      Serial.println("modo reuniao");
 
-    for (int ddb = 0; ddb < sizeof(membro)/*tam_DB*/; ddb++)
+    for (int ddb = 0; ddb < tam_DB; ddb++)
     {//varrer db
       if (membro[ddb].UID == tag_now)
       {//se tiver no db
-        Serial.println("Yes db");
+        if(print_DEV)
+          Serial.println("Yes db");
 
         for(int va = 0; va < 14; va++)
         {//varrer todos os presidentes //para desativar
           if (membro[ddb].coisas[va])
           {//se for presidente então cont_meeting = cont_meeting + 1
-
-            //okk isso aqui é para impedir de chamar go_in() mais de 1 vez !!!!!!!!!!!
+            if(print_DEV)
+            {
+              Serial.print("presidente: ");
+              Serial.println(va);
+            }
             if(!go)
               go_in();
 
@@ -514,16 +532,28 @@ void function_main ()
               time_now = millis() - time_aux;
 
             go = true;
+
+            if(print_DEV)
+            {
+              Serial.print("ddb: ");
+              Serial.print(ddb);
+              Serial.print(" va: ");
+              Serial.println(va);
+            }
           }
         }
 
         if(!go)
         {
-          for (int ddbb = 0; ddbb < sizeof(membro)/*tam_DB*/; ddbb++)
+          for (int ddbb = 0; ddbb < tam_DB; ddbb++)
           {
             if (membro[ddbb].coisas[quem_ativou])
             {
-              //okk isso aqui é para impedir de chamar go_in() mais de 1 vez !!!!!!!!!!!
+              if(print_DEV)
+              {
+                Serial.print("membro: ");
+                Serial.print(quem_ativou);
+              }
               if(!go)
                 go_in();
 
@@ -534,7 +564,7 @@ void function_main ()
       }
     }
 
-    if(!go) //!false == true 
+    if(go == false)
     {
       donot_go_in();
     }
@@ -546,11 +576,12 @@ void function_main ()
 
   else
   {
-    for(int i = 0; i < sizeof(membro)/*tam_DB*/; i++)
+    for(int i = 0; i < tam_DB; i++)
     {
       if (membro[i].UID == tag_now)
       {
-        Serial.println("Yes db");
+        if(print_DEV)
+          Serial.println("Yes db");
 
         for(int va = 0; va < 14; va++)
         {//varrer todos os presidentes
@@ -567,7 +598,7 @@ void function_main ()
 
         if (membro[i].dev) //eh developer
         {
-          if ((membro[i].UID == "FD 3C 50 C5") || //eu quero que minha entrada seja triunfal
+          if ((membro[i].UID == "FD 3C 50 C5 1") || //eu quero que minha entrada seja triunfal
               (membro[i].UID == "51 4F E2 08"))
           {
             go_in_DEV_star_wars();
@@ -588,7 +619,8 @@ void function_main ()
     if (!go)
     {
       donot_go_in();
-      Serial.println("No db");
+      if(print_DEV)
+        Serial.println("No db");
 
       tag_y_db_backup[0] = 0;
     }
@@ -643,10 +675,11 @@ void setup ()
   /************************/
 
   /************************/
-  Serial.begin(9600);
+  Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  Serial.println("");
+  if(print_DEV)
+    Serial.println("");
 
   // Wait for connection
   if (WiFi.status() != WL_CONNECTED)
@@ -655,15 +688,19 @@ void setup ()
     Serial.print(".");
   }
 
-  Serial.println("");
-  Serial.print("Connected to ");
-  Serial.println(ssid);
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
+  if(print_DEV)
+  {
+    Serial.println("");
+    Serial.print("Connected to ");
+    Serial.println(ssid);
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+  }
 
   if (MDNS.begin("esp8266"))
   {
-    Serial.println("MDNS responder started");
+    if(print_DEV)
+      Serial.println("MDNS responder started");
   }
 
   server.on("/", handleRoot);
@@ -676,7 +713,8 @@ void setup ()
   server.onNotFound(handleNotFound);
 
   server.begin();
-  Serial.println("HTTP server started");
+  if(print_DEV)
+    Serial.println("HTTP server started");
 
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
   /************************/
@@ -702,12 +740,16 @@ void loop ()
     tag_backup [0] = "button pressed";
     tag_y_db_backup [0] = 0;
 
-    Serial.println("button pressed");
+    if(print_DEV)
+      Serial.println("button pressed");
     up_firebase("button pressed", false);
 
     /*********/
-    Serial.print("IP address: "); //mostrar qual o IP do esp na porta serial. para developer
-    Serial.println(WiFi.localIP());
+    if(print_DEV)
+    {
+      Serial.print("IP address: "); //mostrar qual o IP do esp na porta serial. para developer
+      Serial.println(WiFi.localIP());
+    }
 
     if((cont_meeting > 2) && (time_now <= 20000)) //20segundos
     {
@@ -723,9 +765,12 @@ void loop ()
       cont_meeting = 0;
     }
 
-    Serial.print(cont_meeting);
-    Serial.print("   ");
-    Serial.println(meeting);
+    if(print_DEV)
+    {
+      Serial.print(cont_meeting);
+      Serial.print("   ");
+      Serial.println(meeting);
+    }
   }
 
   else
