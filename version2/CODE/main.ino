@@ -1,13 +1,25 @@
-/***************************************************************/
-/*        ATUALIZAÇÕES                  UPLOAD nodeMCU         */
-/*     25/01/2019 08:00                25/01/2019 18:00        */
-/*                                                             */
-/***************************************************************/
+/*************************************************************************************************/
+/*        ATUALIZAÇÕES                                          UPLOAD nodeMCU                   */
+/*     26/01/2019 12:21                                        25/01/2019 18:00                  */
+/*                                                                                               */
+/*     26/01/2019 12:11 - Correção do Modo reunião                                               */
+/*     25/01/2019 17:00 - Retornar para versão de segunda feira (21/01/2019) pois ela esta       */
+/*estável.                                                                                       */
+/*************************************************************************************************/
+
+/*                                  NOTAS sobre modo reunião                                     */
+/* Ex: Eu (wesley) passo minha minha carteirinha 2 vezes seguidas (exemplo) mas eu não ativo o   */
+/*modo reunião (eu não quero ativar modo reunião) e digamos que o próximo  pessoa seja um        */
+/*presidente e queira ativar modo reunião. Ele NÃO vai conseguir pois o contador está vinculada a*/
+/*minha carteirinha somente após 25s depois da minha primeira leitura que ele vai conseguir      */
+/*ativar o modo reunião.                                                                         */
+/*************************************************************************************************/
 
 /*****library_str******/ //str == start
 #include <Arduino.h> //tem que importar pois estou usando platformIO
 
-#include <ESP8266WiFi.h>  //na real mesmo tem biblioteca aqui que não esta sendo usada mas deixa assim mesmo
+//na real mesmo tem biblioteca aqui que não esta sendo usada mas deixa assim mesmo
+#include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
@@ -29,7 +41,10 @@
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 
-#define RED_LED D4 //os pinos de controle do motor também estão ligados aqui(ou seja a ponte H e os LED vermelho e verde tem na verdade o mesmo pino) pois não tem 2 pinos sobrando só para eles
+/*os pinos de controle do motor também estão ligados aqui(ou seja a ponte H e os LED vermelho e verde tem na verdade o
+mesmo pino) pois não tem 2 pinos sobrando só para eles*/
+
+#define RED_LED D4
 #define GRE_LED D3
 
 #define BUZZER  D2
@@ -46,7 +61,7 @@ const char* password = "";  //senha da rede
 const char* ssid = "";      //nome da rede
 const char* password = "";  //senha da rede
 /*
-const char* ssid = "h";      //nome da rede
+const char* ssid = "";      //nome da rede
 const char* password = "";  //senha da rede
 */
 
@@ -101,7 +116,7 @@ class membro_class
        26  false, //GP: membro
 
        27 no total
-  */
+    */
 
     membro_class(String UID_aux, String nome_aux)
     {
@@ -114,17 +129,16 @@ int tam_DB = 25; //tam db //<---------- alterar aqui!!!!!!!
 membro_class membro[] =
 {
 
-
-    /*25 no total*/
 };
 
 String tag_backup[32] = ""; //código da tag
 int tag_db_backup[32];      //posição da tag
 int tag_y_db_backup[32];    //está no db?
 
-boolean meeting = false; //modo reunião
+boolean meeting = false; //modo reunião !!!!!!!!!!!!!!!!
 int cont_meeting = 0; //contador para reunião, var aux
 int quem_ativou = 200;
+String tag_time = "";
 double time_now = 0;
 double time_aux = 0;
 
@@ -133,7 +147,7 @@ void oque_a_pessoa_faz ()
 { //se a pessoa é desenvolvedor...
   //encontrar a pessoa e colocar verdadeiro(true) nas coisas que ela faz
 
- 
+}
 /************************/
 
 /*******server_str*******/
@@ -200,6 +214,9 @@ void handleNotFound ()
 
 void go_in ()
 { //efeito normal de entrada (go_in)
+  if(print_DEV)
+    Serial.println("go_in V");
+
   digitalWrite(GRE_LED, HIGH);
   digitalWrite(RED_LED, LOW);
   /*************************/
@@ -239,6 +256,9 @@ void go_in ()
 
 void go_in_DEV ()
 { //efeito diferenciado de entrada (go_in_DEV) para developer
+  if(print_DEV)
+    Serial.println("go_in_DEV V");
+
   digitalWrite(GRE_LED, HIGH);
   digitalWrite(RED_LED, LOW);
   /*************************/
@@ -379,6 +399,9 @@ void secondSection()
 
 void go_in_DEV_star_wars ()
 {
+  if(print_DEV)
+    Serial.println("go_in_DEV_star_wars V");
+
   digitalWrite(GRE_LED, HIGH);
   digitalWrite(RED_LED, LOW);
   /*************************/
@@ -406,6 +429,9 @@ void go_in_DEV_star_wars ()
 
 void donot_go_in ()
 { //tag nao cadastrada
+  if(print_DEV)
+    Serial.println("donot_go_in V");
+
   digitalWrite(RED_LED, HIGH);
 
   tone(BUZZER, 523);
@@ -455,7 +481,7 @@ void meeting_buzzer ()
 void up_firebase (String tag, boolean go_db)
 { //enviar as tag para firebase
   //desativado pois o roteador próprio do ramo não está conectando a internet
-
+  /*
   if(print_DEV)
     Serial.println("-------firebase str-----------");
 
@@ -478,7 +504,193 @@ void up_firebase (String tag, boolean go_db)
     Serial.print("firebase: tag now: ");
     Serial.println(tag);
     Serial.println("--------firebase end----------");
+  }*/
+}
+
+void function_main_meeting ()
+{
+  boolean go = false; //var aux para seber se a tag esta no db
+
+  if(print_DEV)
+    Serial.println("modo reuniao");
+
+  for (int ddb = 0; ddb < tam_DB; ddb++)
+  {//varrer db
+    if (membro[ddb].UID == tag_now)
+    {//se tiver no db
+      if(print_DEV)
+        Serial.println("Yes db");
+
+        int va = quem_ativou - 14;
+        if (membro[ddb].coisas[va])
+        {//se for presidente então cont_meeting = cont_meeting + 1
+          if(print_DEV)
+          {
+            Serial.print("presidente: ");
+            Serial.println(va);
+          }
+
+          if(tag_time == tag_now)
+          {
+            cont_meeting += 1;
+
+            if(!go)
+              go_in();
+
+            go = true;
+
+            if(cont_meeting > 2)
+              quem_ativou = va + 14;
+
+            if(print_DEV)
+            {
+              Serial.print("cont_meeting += 1 --->");
+              Serial.println(cont_meeting);
+            }
+          }
+
+          if(cont_meeting == 0)
+          {
+            cont_meeting += 1;
+
+            if(!go)
+              go_in();
+
+            go = true;
+          }
+
+          if(cont_meeting == 1)
+          {
+            time_now = millis();
+            tag_time = tag_now;
+          }
+
+          if(print_DEV)
+          {
+            Serial.print(" va: ");
+            Serial.println(va);
+          }
+        }
+
+      if(!go)
+      {
+        if (membro[ddb].coisas[quem_ativou])
+        {
+          if(print_DEV)
+          {
+            Serial.print("ddb: ");
+            Serial.println(ddb);
+            Serial.println("-----");
+
+            Serial.print("quem_ativou: ");
+            Serial.println(quem_ativou);
+          }
+          if(!go)
+            go_in();
+
+          go = true;
+        }
+      }
+      /*************/
+    }
   }
+
+  if(go == false)
+  {
+    donot_go_in();
+  }
+  else
+  {
+    go = false;
+  }
+}
+
+void function_main_normal ()
+{
+  boolean go = false; //var aux para seber se a tag esta no db
+
+  for(int i = 0; i < tam_DB; i++)
+  {
+    if (membro[i].UID == tag_now)
+    {
+      if(print_DEV)
+        Serial.println("Yes db");
+
+      //responsável por preparar o modo reunião
+      for(int va = 0; va < 14; va++)
+      {//varrer todos os presidentes
+        if (membro[i].coisas[va])
+        {//se for presidente então cont_meeting = cont_meeting + 1
+          if(print_DEV)
+          {
+            Serial.print("presidente: ");
+            Serial.println(va);
+          }
+
+          if(tag_time == tag_now)
+          {
+            cont_meeting += 1;
+
+            if(cont_meeting > 2)
+              quem_ativou = va + 14;
+
+            if(print_DEV)
+            {
+              Serial.print("cont_meeting += 1 --->");
+              Serial.println(cont_meeting);
+            }
+          }
+
+          if(cont_meeting == 0)
+          {
+            cont_meeting += 1;
+          }
+
+          if(cont_meeting == 1)
+          {
+            time_now = millis();
+            tag_time = tag_now;
+          }
+
+          if(print_DEV)
+          {
+            Serial.print(" va: ");
+            Serial.println(va);
+          }
+        }
+      }
+
+      if (membro[i].dev) //eh developer
+      {
+        if ((membro[i].UID == "FD 3C 50 C5") || //eu quero que minha entrada seja triunfal
+            (membro[i].UID == "51 4F E2 08"))
+        {
+          go_in_DEV_star_wars();
+        }
+        else
+          go_in_DEV();
+      }
+      else
+        go_in();
+
+
+      tag_db_backup[0] = i;
+      go = true;
+      tag_y_db_backup[0] = 1;
+    }
+  }
+
+  if (!go)
+  {
+    donot_go_in();
+    if(print_DEV)
+      Serial.println("No db");
+
+    tag_y_db_backup[0] = 0;
+  }
+
+  up_firebase(tag_now, go); //envia a tag para firebase
+  go = !go;
 }
 
 void function_main ()
@@ -496,8 +708,6 @@ void function_main ()
     tag_y_db_backup [i] = tag_y_db_backup [i - 1];
   }
 
-  boolean go = false; //var aux para seber se a tag esta no db
-
   tag_backup[0] = tag_now;
 
   if(print_DEV)
@@ -505,128 +715,11 @@ void function_main ()
 
   if(meeting)
   {
-    if(print_DEV)
-      Serial.println("modo reuniao");
-
-    for (int ddb = 0; ddb < tam_DB; ddb++)
-    {//varrer db
-      if (membro[ddb].UID == tag_now)
-      {//se tiver no db
-        if(print_DEV)
-          Serial.println("Yes db");
-
-        for(int va = 0; va < 14; va++)
-        {//varrer todos os presidentes //para desativar
-          if (membro[ddb].coisas[va])
-          {//se for presidente então cont_meeting = cont_meeting + 1
-            if(print_DEV)
-            {
-              Serial.print("presidente: ");
-              Serial.println(va);
-            }
-            if(!go)
-              go_in();
-
-            cont_meeting += 1;
-            if(cont_meeting == 1)
-              time_now = millis() - time_aux;
-
-            go = true;
-
-            if(print_DEV)
-            {
-              Serial.print("ddb: ");
-              Serial.print(ddb);
-              Serial.print(" va: ");
-              Serial.println(va);
-            }
-          }
-        }
-
-        if(!go)
-        {
-          for (int ddbb = 0; ddbb < tam_DB; ddbb++)
-          {
-            if (membro[ddbb].coisas[quem_ativou])
-            {
-              if(print_DEV)
-              {
-                Serial.print("membro: ");
-                Serial.print(quem_ativou);
-              }
-              if(!go)
-                go_in();
-
-              go = true;
-            }
-          }
-        }
-      }
-    }
-
-    if(go == false)
-    {
-      donot_go_in();
-    }
-    else
-    {
-      go = false;
-    }
+    function_main_meeting();
   }
-
   else
   {
-    for(int i = 0; i < tam_DB; i++)
-    {
-      if (membro[i].UID == tag_now)
-      {
-        if(print_DEV)
-          Serial.println("Yes db");
-
-        for(int va = 0; va < 14; va++)
-        {//varrer todos os presidentes
-          if (membro[i].coisas[va])
-          {//se for presidente então cont_meeting = cont_meeting + 1
-            cont_meeting += 1;
-
-            if(cont_meeting > 2)
-            {
-              quem_ativou = va + 14;
-            }
-          }
-        }
-
-        if (membro[i].dev) //eh developer
-        {
-          if ((membro[i].UID == "FD 3C 50 C5 1") || //eu quero que minha entrada seja triunfal
-              (membro[i].UID == "51 4F E2 08"))
-          {
-            go_in_DEV_star_wars();
-          }
-          else
-            go_in_DEV();
-        }
-        else
-          go_in();
-
-
-        tag_db_backup[0] = i;
-        go = true;
-        tag_y_db_backup[0] = 1;
-      }
-    }
-
-    if (!go)
-    {
-      donot_go_in();
-      if(print_DEV)
-        Serial.println("No db");
-
-      tag_y_db_backup[0] = 0;
-    }
-
-    up_firebase(tag_now, go); //envia a tag para firebase
-    go = !go;
+    function_main_normal();
   }
 }
 
@@ -751,7 +844,7 @@ void loop ()
       Serial.println(WiFi.localIP());
     }
 
-    if((cont_meeting > 2) && (time_now <= 20000)) //20segundos
+    if((cont_meeting > 2) && (time_aux - time_now <= 25000)) //25segundos
     {
       meeting = !meeting;
       cont_meeting = 0;
@@ -760,15 +853,11 @@ void loop ()
         meeting_buzzer();  //efeito sonoro para indicar que entrou no modo reunião
     }
 
-    if(cont_meeting > 20000) //20s
-    {
-      cont_meeting = 0;
-    }
-
     if(print_DEV)
     {
+      Serial.print("cont_meeting:");
       Serial.print(cont_meeting);
-      Serial.print("   ");
+      Serial.print("  meeting:");
       Serial.println(meeting);
     }
   }
@@ -785,6 +874,33 @@ void loop ()
     meeting_led();
   }
 
-  if(cont_meeting == 0)
-    time_aux = millis();
+  time_aux = millis();
+
+  if(time_aux - time_now > 25000) //25s
+  {
+    cont_meeting = 0;
+  }
+
+  if(/*print_DEV*/false)
+  {
+    Serial.print("meeting: ");
+    Serial.println(meeting);
+
+    Serial.print("cont_meeting: ");
+    Serial.println(cont_meeting);
+
+    Serial.print("quem_ativou: ");
+    Serial.println(quem_ativou);
+
+    Serial.print("time_now: ");
+    Serial.println(time_now);
+
+    Serial.print("time_aux: ");
+    Serial.println(time_aux);
+
+    Serial.print("tag_time: ");
+    Serial.println(tag_time);
+
+    Serial.println("------------------------------");
+  }
 }
