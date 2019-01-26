@@ -1,12 +1,14 @@
 /*************************************************************************************************/
-/*        ATUALIZAÇÕES                                          UPLOAD nodeMCU                   */
-/*     26/01/2019 12:21                                        25/01/2019 18:00                  */
+/* ÚLTIMA:     ATUALIZAÇÃO                                           UPLOAD nodeMCU              */
+/*           26/01/2019 14:21                                       25/01/2019 18:00             */
 /*                                                                                               */
-/*     26/01/2019 12:11 - Correção do Modo reunião                                               */
+/*     26/01/2019 14:21 - Correção do Modo reunião, print_DEV enviando t == true e f ==false, set*/
+/*tempo máximo de reunião como 1h20 == 80min.                                                    */
 /*     25/01/2019 17:00 - Retornar para versão de segunda feira (21/01/2019) pois ela esta       */
 /*estável.                                                                                       */
 /*************************************************************************************************/
 
+/*************************************************************************************************/
 /*                                  NOTAS sobre modo reunião                                     */
 /* Ex: Eu (wesley) passo minha minha carteirinha 2 vezes seguidas (exemplo) mas eu não ativo o   */
 /*modo reunião (eu não quero ativar modo reunião) e digamos que o próximo  pessoa seja um        */
@@ -61,7 +63,7 @@ const char* password = "";  //senha da rede
 const char* ssid = "";      //nome da rede
 const char* password = "";  //senha da rede
 /*
-const char* ssid = "";      //nome da rede
+const char* ssid = "h";      //nome da rede
 const char* password = "";  //senha da rede
 */
 
@@ -72,7 +74,7 @@ ESP8266WebServer server(80);  //porta 80 é padrão para entrada e saída de dad
 /************************/
 
 /************************/
-boolean print_DEV = true;
+boolean print_DEV = false;
 
 String tag_now = "";
 int tag_db = 0;
@@ -141,6 +143,7 @@ int quem_ativou = 200;
 String tag_time = "";
 double time_now = 0;
 double time_aux = 0;
+double time_max = 0;
 
 
 void oque_a_pessoa_faz ()
@@ -850,7 +853,10 @@ void loop ()
       cont_meeting = 0;
 
       if(meeting)
+      {
         meeting_buzzer();  //efeito sonoro para indicar que entrou no modo reunião
+        time_max = millis();
+      }
     }
 
     if(print_DEV)
@@ -872,6 +878,9 @@ void loop ()
   if(meeting)
   {
     meeting_led();
+
+    if(millis() - time_max > 4800000) // (80min)*[60s/1min]*[1000ms/s] = 4 800 000ms
+      meeting = !meeting;
   }
 
   time_aux = millis();
@@ -881,7 +890,7 @@ void loop ()
     cont_meeting = 0;
   }
 
-  if(/*print_DEV*/false)
+  if(print_DEV)
   {
     Serial.print("meeting: ");
     Serial.println(meeting);
@@ -901,6 +910,21 @@ void loop ()
     Serial.print("tag_time: ");
     Serial.println(tag_time);
 
+    Serial.print("time_max: ");
+    Serial.println(time_max);
+
     Serial.println("------------------------------");
+
+    delay(500);
+  }
+
+  while(Serial.available() > 0)
+  {
+    char r = Serial.read();
+
+    if((r == 'T') || (r == 't'))
+      print_DEV = true;
+    else if((r == 'F') || (r == 'f'))
+      print_DEV = false;
   }
 }
