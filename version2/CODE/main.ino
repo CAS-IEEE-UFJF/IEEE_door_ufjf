@@ -1,9 +1,10 @@
 /*************************************************************************************************/
 /* ÚLTIMA:     ATUALIZAÇÃO                                           UPLOAD nodeMCU              */
-/*           26/01/2019 14:21                                       25/01/2019 18:00             */
+/*           27/01/2019 12:00                                       25/01/2019 18:00             */
 /*                                                                                               */
-/*     26/01/2019 14:21 - Correção do Modo reunião, print_DEV enviando t == true e f ==false, set*/
-/*tempo máximo de reunião como 1h20 == 80min.                                                    */
+/*     27/01/2019 12:00 - novos comentários                                                      */
+/*     26/01/2019 14:21 - Correção do Modo reunião, print_DEV enviando t == true e f == false,   */
+/*set tempo máximo de reunião como 1h20 == 80min.                                                */
 /*     25/01/2019 17:00 - Retornar para versão de segunda feira (21/01/2019) pois ela esta       */
 /*estável.                                                                                       */
 /*************************************************************************************************/
@@ -60,13 +61,6 @@ const char* ssid = "";      //nome da rede
 const char* password = "";  //senha da rede
 */
 
-const char* ssid = "";      //nome da rede
-const char* password = "";  //senha da rede
-/*
-const char* ssid = "h";      //nome da rede
-const char* password = "";  //senha da rede
-*/
-
 #define FIREBASE_HOST ""   //autenticação no firebase
 #define FIREBASE_AUTH ""
 
@@ -74,11 +68,6 @@ ESP8266WebServer server(80);  //porta 80 é padrão para entrada e saída de dad
 /************************/
 
 /************************/
-boolean print_DEV = false;
-
-String tag_now = "";
-int tag_db = 0;
-
 class membro_class
 {
   public:
@@ -130,26 +119,41 @@ class membro_class
 int tam_DB = 25; //tam db //<---------- alterar aqui!!!!!!!
 membro_class membro[] =
 {
+    
 
+    //novo usuário: membro_class("TAG", "nome"),
+
+    /*24*/ membro_class("B5 80 13 AB", "Tag azul de segurança")
+
+    /*25 no total*/
 };
 
+boolean print_DEV = false; //imprimir variáveis na porta USB
+
+String tag_now = "";  //tag lida recentimente
+int tag_db = 0;
+
+//histórico no servidor local
 String tag_backup[32] = ""; //código da tag
 int tag_db_backup[32];      //posição da tag
 int tag_y_db_backup[32];    //está no db?
 
-boolean meeting = false; //modo reunião !!!!!!!!!!!!!!!!
-int cont_meeting = 0; //contador para reunião, var aux
+boolean meeting = false; //modo reunião
+int cont_meeting = 0; //contador para reunião
+
 int quem_ativou = 200;
-String tag_time = "";
+
+String tag_time = ""; //tag quando o contador (cont_meeting) é 1
 double time_now = 0;
 double time_aux = 0;
 double time_max = 0;
-
+//tem var aqui que podem se descartadas... mas... code 100% otimizado, não é prioridade.
 
 void oque_a_pessoa_faz ()
 { //se a pessoa é desenvolvedor...
   //encontrar a pessoa e colocar verdadeiro(true) nas coisas que ela faz
 
+  
 }
 /************************/
 
