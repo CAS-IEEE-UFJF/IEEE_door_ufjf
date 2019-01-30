@@ -1,8 +1,9 @@
 /*************************************************************************************************/
 /* ÚLTIMA:     ATUALIZAÇÃO                                           UPLOAD nodeMCU              */
-/*           27/01/2019 12:00                                       25/01/2019 18:00             */
+/*           30/01/2019 11:00                                       30/01/2019 12:00             */
 /*                                                                                               */
-/*     27/01/2019 12:00 - novos comentários                                                      */
+/*     30/01/2019 11:00 - Ajuster na função main                                                 */
+/*     27/01/2019 12:00 - Novos comentários                                                      */
 /*     26/01/2019 14:21 - Correção do Modo reunião, print_DEV enviando t == true e f == false,   */
 /*set tempo máximo de reunião como 1h20 == 80min.                                                */
 /*     25/01/2019 17:00 - Retornar para versão de segunda feira (21/01/2019) pois ela esta       */
@@ -16,6 +17,11 @@
 /*presidente e queira ativar modo reunião. Ele NÃO vai conseguir pois o contador está vinculada a*/
 /*minha carteirinha somente após 25s depois da minha primeira leitura que ele vai conseguir      */
 /*ativar o modo reunião.                                                                         */
+/*                                                                                               */
+/*                                        BUTTON                                                 */
+/* O tempo de resposta do botão NÂO está instantâneo!!!!!! para resolver isso, teríamos que usar */
+/*interrupção por hardware e eliminar os delay(). É melhor educar a galera como sendo um botão de*/
+/*pressão                                                                                        */
 /*************************************************************************************************/
 
 /*****library_str******/ //str == start
@@ -56,6 +62,12 @@ const int button = A0;
 /************************/
 
 /************************/
+/*
+const char* ssid = "";      //nome da rede
+const char* password = "";  //senha da rede
+*/
+const char* ssid = "";      //nome da rede
+const char* password = "";  //senha da rede
 /*
 const char* ssid = "";      //nome da rede
 const char* password = "";  //senha da rede
@@ -120,12 +132,6 @@ int tam_DB = 25; //tam db //<---------- alterar aqui!!!!!!!
 membro_class membro[] =
 {
     
-
-    //novo usuário: membro_class("TAG", "nome"),
-
-    /*24*/ membro_class("B5 80 13 AB", "Tag azul de segurança")
-
-    /*25 no total*/
 };
 
 boolean print_DEV = false; //imprimir variáveis na porta USB
@@ -153,7 +159,7 @@ void oque_a_pessoa_faz ()
 { //se a pessoa é desenvolvedor...
   //encontrar a pessoa e colocar verdadeiro(true) nas coisas que ela faz
 
-  
+
 }
 /************************/
 
@@ -468,7 +474,7 @@ void meeting_led ()
 { //piscar led vermelho para indicar que está em reunião
   digitalWrite(RED_LED, HIGH);
   digitalWrite(GRE_LED, HIGH);
-  delay(250);
+  delay(200);
   digitalWrite(RED_LED, LOW);
   digitalWrite(GRE_LED, LOW);
   delay(100);
@@ -651,10 +657,7 @@ void function_main_normal ()
           if(cont_meeting == 0)
           {
             cont_meeting += 1;
-          }
 
-          if(cont_meeting == 1)
-          {
             time_now = millis();
             tag_time = tag_now;
           }
@@ -854,13 +857,11 @@ void loop ()
     if((cont_meeting > 2) && (time_aux - time_now <= 25000)) //25segundos
     {
       meeting = !meeting;
+      meeting_buzzer();  //efeito sonoro para indicar que entrou (ou saiu) do modo reunião
       cont_meeting = 0;
 
       if(meeting)
-      {
-        meeting_buzzer();  //efeito sonoro para indicar que entrou no modo reunião
         time_max = millis();
-      }
     }
 
     if(print_DEV)
