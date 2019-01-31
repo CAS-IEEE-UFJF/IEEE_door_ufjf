@@ -26,6 +26,37 @@ Quando uma pessoa aproxima sua carteirinha do equipamento, o RFID - RC522 é o s
 * Buzzer;
 * Jumpers.
 
+
+##### * foto:
+![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG.png)
+
+![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_rfid.png)
+
+![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_esp.png)
+
+##### * flowchart:
+![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/flowchart_IMG.jpeg)
+
+
+### Oque é modo reunião?
+
+Modo reunião é uma função que permite selecionar quem vai ter acesso ao ramo em determinado momento. Somente o presidente do capítulo ou cargo algum cargo da gestão pode iniciar o modo reunião. 
+
+Exemplo o presidente da eletrônica iniciou o modo reunião. Os led's vão começar a piscar (indicativo que está no modo reunião) e terá efeito sonoro para indicar que estrou no modo reunião. Depois disso, somente membros da eletrônica conseguirão entrar e qualquer outro membro ou presidente terá acesso negado.
+
+Para ativar o modo reunião o presidente terá que passar sua carteirinha 3 ou mais vezes e pressionar o botão interno. Tudo isso em menos de 25s (da para fazer tudo isso em 9s).
+
+Se um presidente passa sua carteirinha, mas não ativa o modo reunião e em menos de 25s vem outro presidente e passa sua carteirinha tentando ativar o modo reunião. Então, esse presidente terá que aguardar o contador interno zerar. Isso leva entorno de 25s.
+
+| Projeto | estado| Observação |
+| ------- | ----- | ---------- |
+| Leitura e separação entre carterinhas cadastradas e não cadastradas | ![](https://img.shields.io/badge/build-passing-rgb(76%2C198%2C31).svg)| -- |
+| Modo reunião | ![](https://img.shields.io/badge/build-test-yellow.svg) | Apresenta alguns problemas |
+| Upload Firebase | ![](https://img.shields.io/badge/build-failed-red.svg) | Problemas na internet do ramo |
+| Page local | ![](https://img.shields.io/badge/build-test-yellow.svg)| Aprimorar layout |
+| Page na internet | ![](https://img.shields.io/badge/build-unknown-lightgrey.svg) | Não começamos|
+
+
 ### Files
 
 ```
@@ -66,17 +97,6 @@ Quando uma pessoa aproxima sua carteirinha do equipamento, o RFID - RC522 é o s
 |--- README.md
 |--- this_is_nodeMCU.pdf
 ```
-
-
-##### * foto:
-![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG.png)
-
-![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_rfid.png)
-
-![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_esp.png)
-
-##### * flowchart:
-![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/flowchart_IMG.jpeg)
 
 ## [ 1º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version1)
 Objetivo da 1º versão é apresentar para a equipe o Arduino e desenvolver a capacidade de programação.
