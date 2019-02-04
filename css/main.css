@@ -1,0 +1,26 @@
+@media only screen and (min-device-width: 700px) {
+  body, html{
+    height: 100%;
+  }
+
+  .cont{
+    height: calc(100% - 23px);
+
+    background-image: url('');
+
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    position: relative;
+
+    overflow: auto;
+  }
+
+  .w200{
+    width: 200px;
+  }
+
+  .w350{
+    width: 350px;
+  }
+}
