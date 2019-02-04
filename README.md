@@ -26,15 +26,19 @@ Quando uma pessoa aproxima sua carteirinha do equipamento, o RFID - RC522 é o s
 * Buzzer;
 * Jumpers.
 
+<hr>
 
-##### * foto:
-![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG.png)
+* #### foto:
+![](https://raw.githubusercontent.com/CAS-IEEE-UFJF/IEEE_door_ufjf/master/version2/circuito-porta_IMG.png)
 
 ![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_rfid.png)
 
 ![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/circuito-porta_IMG_in_esp.png)
 
-##### * flowchart:
+
+
+* #### flowchart:
+
 ![](https://github.com/CAS-IEEE-UFJF/IEEE_door_ufjf/blob/master/version2/flowchart_IMG.jpeg)
 
 
@@ -56,6 +60,9 @@ Se um presidente passa sua carteirinha, mas não ativa o modo reunião e em meno
 | Page local | ![](https://img.shields.io/badge/build-test-yellow.svg)| Aprimorar layout |
 | Page na internet | ![](https://img.shields.io/badge/build-unknown-lightgrey.svg) | Não começamos|
 
+
+### [Página online:](https://cas-ieee-ufjf.github.io/IEEE_door_ufjf/)
+https://cas-ieee-ufjf.github.io/IEEE_door_ufjf/
 
 ### Files
 
