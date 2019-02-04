@@ -15,9 +15,6 @@
     <div class="w3-top">
       <div class="w3-bar w3-grey w3-center">
         <a href="#" class="w3-bar-item w3-margin w3-button">Home</a>
-        <a href="#" class="w3-bar-item w3-margin w3-button">Link 1</a>
-        <a href="#" class="w3-bar-item w3-margin w3-button">Link 2</a>
-        <a href="#" class="w3-bar-item w3-margin w3-button">Link 3</a>
 
         <img src="image/cas_logo.png" class="w3-round-small w3-margin w3-right" alt="logo" style="height:39px">
 		    <img src="image/IEEE_logo.png" class="w3-round-small w3-margin w3-right" alt="logo" style="height:39px">
@@ -25,10 +22,14 @@
     </div>
     <br>
 
-    <div class="cont w200 w3-left w3-blue w3-animate-left">
-      <div class="w3-margin">
-        <p class="init">BLUE</p>
+    <div class="cont w3-left w3-white w3-animate-left" id="marter_container_left">
+      <div class="w3-sidebar w3-bar-block w3-text-green" style="display:none" id="mySidebar">
+        <button onclick="w3_close()" class="w3-bar-item w3-button w3-large">Close &times;</button>
+        <a href="#" class="w3-bar-item w3-button">Link 1</a>
+        <a href="#" class="w3-bar-item w3-button">Link 2</a>
+        <a href="#" class="w3-bar-item w3-button">Link 3</a>
 
+        <p class="init">BLUE</p>
         <h1 class="w3-center">HELLO BLUE</h1>
 
         <ul>
@@ -52,17 +53,27 @@
           <li>hello</li>
           <li>hello</li>
           <li>hello</li>
+          <li>hello</li>
+          <li>hello</li>
+          <li>hello</li>
+          <li>hello</li>
         </ul>
       </div>
+
+      <!-- Page Content -->
+      <div class="w3-teal text">
+        <button class="w3-button w3-teal w3-large" onclick="w3_open()">☰</button>
+      </div>
     </div>
+    <script type="text/javascript" src="js/main.js"></script>
 
-    <div class="cont w350 w3-right w3-green w3-animate-right">
-      <div class="w3-margin">
-        <p class="init">GREEN</p>
+    <!------------------------------------------>
 
-        <h1 class="w3-center">HELLO GREEN</h1>
+    <div class="cont w3-right w3-white w3-animate-right" id="marter_container_right">
+      <div class="w3-sidebar w3-bar-block w3-text-green" style="display:none" id="mySidebar_right">
+        <button onclick="w3_close_right()" class="w3-bar-item w3-button w3-large">Close &times;</button>
 
-        <p>
+        <p class="w3-container">
           Brazil (Portuguese: Brasil Portuguese pronunciation: [bɾaˈziw]),[nt 1] officially the Federative Republic of Brazil (Portuguese: República Federativa do Brasil, About this soundlisten (help·info)),[9] is the largest country in both South America and Latin America. At 8.5 million square kilometers (3.2 million square miles)[10] and with over 208 million people, Brazil is the world's fifth-largest country by area and the fifth most populous. The capital is Brasília, and the most populated city is São Paulo. The federation is composed of the union of the 26 states, the Federal District, and the 5,570 municipalities. It is the largest country to have Portuguese as an official language and the only one in the Americas;[11][12] it is also one of the most multicultural and ethnically diverse nations, due to over a century of mass immigration from around the world.[13]
 
           Bounded by the Atlantic Ocean on the east, Brazil has a coastline of 7,491 kilometers (4,655 mi).[14] It borders all other South American countries except Ecuador and Chile and covers 47.3% of the continent's land area.[15] Its Amazon River basin includes a vast tropical forest, home to diverse wildlife, a variety of ecological systems, and extensive natural resources spanning numerous protected habitats.[14] This unique environmental heritage makes Brazil one of 17 megadiverse countries, and is the subject of significant global interest and debate regarding deforestation and environmental protection.
@@ -72,9 +83,15 @@
           Brazil is considered an advanced emerging economy.[18] It has the eighth largest GDP in the world by both nominal and PPP measures.[19][20] It is one of the world's major breadbaskets, being the largest producer of coffee for the last 150 years.[21] It is classified as an upper-middle income economy by the World Bank[22] and a newly industrialized country,[23][24] with the largest share of global wealth in Latin America. Brazil is a regional power and sometimes considered a great[25][26][27] or a middle power in international affairs.[27][28][29][30][31][26] On account of its international recognition and influence, the country is subsequently classified as an emerging power[32] and a potential superpower by several analysts.[33][34][35] Brazil is a founding member of the United Nations, the G20, BRICS, Union of South American Nations, Mercosul, Organization of American States, Organization of Ibero-American States and the Community of Portuguese Language Countries.
         </p>
       </div>
-    </div>
 
-    <div class="cont w3-center">
+      <!-- Page Content -->
+      <div class="w3-teal text">
+        <button class="w3-button w3-teal w3-large" onclick="w3_open_right()">☰</button>
+      </div>
+    </div>
+    <script type="text/javascript" src="js/main.js"></script>
+
+    <div class="cont w3-center w3-light-grey w3-border">
       <div class="w3-margin">
         <iframe src="https://wesley-cantarino.github.io/Fourier_drawings/" frameborder="0" style="overflow:hidden;overflow-x:hidden;overflow-y:hidden;height:calc(100% - 10px);width:100%;position:absolute;top:10px;left:0px;right:0px;bottom:0px" height="100%" width="100%"></iframe>
       </div>

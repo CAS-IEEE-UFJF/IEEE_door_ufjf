@@ -1,26 +1,27 @@
-/*@media only screen and (min-device-width: 700px) {*/
-  body, html{
-    height: 100%;
-  }
+body, html{
+  height: 100%;
+}
 
-  .cont{
-    height: calc(100% - 23px);
+.cont{
+  height: calc(100% - 71px);
+  top: 48px;
 
-    background-image: url('');
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  position: relative;
 
-    background-size: cover;
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    position: relative;
+  overflow: auto;
+}
 
-    overflow: auto;
-  }
+#mySidebar{
+  width: 200px;
+  height: calc(100% - 71px);
+  display: block;
+}
 
-  .w200{
-    width: 200px;
-  }
-
-  .w350{
-    width: 350px;
-  }
-/*}*/
+#mySidebar_right{
+  width: 300px;
+  height: calc(100% - 71px);
+  display: block;
+}
