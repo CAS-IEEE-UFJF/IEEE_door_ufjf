@@ -58,8 +58,9 @@ Se um presidente passa sua carteirinha, mas não ativa o modo reunião e em meno
 | Modo reunião | ![](https://img.shields.io/badge/build-test-yellow.svg) | Apresenta alguns problemas |
 | Upload Firebase | ![](https://img.shields.io/badge/build-failed-red.svg) | Problemas na internet do ramo |
 | Page local | ![](https://img.shields.io/badge/build-test-yellow.svg)| Aprimorar layout |
-| Page na internet | ![](https://img.shields.io/badge/build-unknown-lightgrey.svg) | Não começamos|
+| Page na internet | ![](https://img.shields.io/badge/build-test-yellow.svg) | Não começamos|
 
+[comment]: <https://img.shields.io/badge/build-unknown-lightgrey.svg>
 
 ### [Página online:](https://cas-ieee-ufjf.github.io/IEEE_door_ufjf/)
 https://cas-ieee-ufjf.github.io/IEEE_door_ufjf/
