@@ -25,3 +25,8 @@ body, html{
   height: calc(100% - 71px);
   display: block;
 }
+
+.logo_main_text{
+  font-size: 18px;
+  color: #2a2d2e;
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+  </head>
+
+  <body>
+    <main>
+      <h1>Apresentação</h1>
+
+      <p>O Ramo Estudantil IEEE devido ao seu grande número de membros, necessitava de um melhor  controle de acesso ao seu domínio. Porém, as trancas convencionais demandam cópias de chave e não havia como saber quem entrou e em qual horário. A partir disso fizemos um levantamento de qual seria a melhor proposta para resolver o controle de acesso ao tempo que pudéssemos gerenciar as chaves. Em nosso levantamento descobrimos que as carteirinhas estudantis possuíam um dispositivo interno para identificação chamado de radiofrequência chamado RFID, elas por sua vez, são chaves únicas e podem ser obtidas através de leitura.
+      </p>
+
+      <h1>Objetivo</h1>
+
+      <p>O projeto Porta Tunada 2.0 consiste em um equipamento eficiente e de baixo custo para controlar a entrada e saída de pessoas na sala do Ramo Estudantil IEEE UFJF, estando restrito o acesso somente aos membros que tenham suas carteirinhas estudantis cadastradas. Nessa 2º versão fomentamos a equipe o uso do nodeMCU (ESP8266) e para desenvolver a capacidade de programação em IOT.
+      </p>
+
+      <h1>Descrição do funcionamento:</h1>
+
+      <p>Quando uma pessoa aproxima sua carteirinha do equipamento, o RFID - RC522 é o sensor que faz a leitura da tag da carteirinha aproximada. O ESP8266 recebe essa informação e permite que o motor abra a porta, somente se, a mesma for reconhecida. E, então, o LED verde acende e o motor é acionado abrindo a porta. Caso contrário, o buzzer emite um som e o LED vermelho acende. A fonte é utilizada para alimentar o circuito, a ponte H controla o movimento do motor e os jumpers fazem a ligação entre os componentes.
+      </p>
+
+      <h1>Componentes utilizados:</h1>
+
+      <ul>
+        <li>Fonte de 12V</li>
+        <li>Fonte 5V</li>
+        <li>Microcontrolador ESP8266</li>
+        <li>Sensor RFDI - RC522</li>
+        <li>Ponte H - l290n</li>
+        <li>Motor DC</li>
+        <li>Dois LED’s (um vermelho e um verde)</li>
+        <li>Buzzer</li>
+        <li>Jumpers.</li>
+      </ul>
+
+      <h1>Oque é modo reunião?</h1>
+
+      <p>Modo reunião é uma função que permite selecionar quem vai ter acesso ao ramo em determinado momento. Somente o presidente do capítulo ou cargo algum cargo da gestão pode iniciar o modo reunião.
+      </p>
+
+      <p>Exemplo o presidente da eletrônica iniciou o modo reunião. Os led's vão começar a piscar (indicativo que está no modo reunião) e terá efeito sonoro para indicar que estrou no modo reunião. Depois disso, somente membros da eletrônica conseguirão entrar e qualquer outro membro ou presidente terá acesso negado.
+      </p>
+
+      <p>Para ativar o modo reunião o presidente terá que passar sua carteirinha 3 ou mais vezes e pressionar o botão interno. Tudo isso em menos de 25s (da para fazer tudo isso em 9s).
+      </p>
+
+      <p>Se um presidente passa sua carteirinha, mas não ativa o modo reunião e em menos de 25s vem outro presidente e passa sua carteirinha tentando ativar o modo reunião. Então, esse presidente terá que aguardar o contador interno zerar. Isso leva entorno de 25s.
+      </p>
+    </main>
+  </body>
+</html>
