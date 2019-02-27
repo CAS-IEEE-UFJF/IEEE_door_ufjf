@@ -1,4 +1,18 @@
-![](https://img.shields.io/badge/build-passing-rgb(76%2C198%2C31).svg)
+<!-- ![](https://img.shields.io/badge/build-passing-rgb(76%2C198%2C31).svg) -->
+
+| Projeto | estado| Observação |
+| ------- | ----- | ---------- |
+| Leitura e separação entre carterinhas cadastradas e não cadastradas | ![](https://img.shields.io/badge/build-passing-rgb(76%2C198%2C31).svg)| -- |
+| Modo reunião | ![](https://img.shields.io/badge/build-passing-rgb(76%2C198%2C31).svg) | -- |
+| Upload Firebase | ![](https://img.shields.io/badge/build-failed-red.svg) | Problemas na internet do ramo |
+| Page local | ![](https://img.shields.io/badge/build-test-yellow.svg)| Aprimorar layout |
+| Page na internet | ![](https://img.shields.io/badge/build-test-yellow.svg) | Aprimorar layout|
+
+[comment]: <https://img.shields.io/badge/build-unknown-lightgrey.svg>
+
+### [Página online:](https://cas-ieee-ufjf.github.io/IEEE_door_ufjf/)
+https://cas-ieee-ufjf.github.io/IEEE_door_ufjf/ é o mesmo site do QR code que está no ramo.
+
 
 ## [ 2º Versão](https://github.com/wesley-cantarino/IEEE_door_ufjf/tree/master/version2)
 ### Apresentação
@@ -52,18 +66,6 @@ Para ativar o modo reunião o presidente terá que passar sua carteirinha 3 ou m
 
 Se um presidente passa sua carteirinha, mas não ativa o modo reunião e em menos de 25s vem outro presidente e passa sua carteirinha tentando ativar o modo reunião. Então, esse presidente terá que aguardar o contador interno zerar. Isso leva entorno de 25s.
 
-| Projeto | estado| Observação |
-| ------- | ----- | ---------- |
-| Leitura e separação entre carterinhas cadastradas e não cadastradas | ![](https://img.shields.io/badge/build-passing-rgb(76%2C198%2C31).svg)| -- |
-| Modo reunião | ![](https://img.shields.io/badge/build-test-yellow.svg) | Apresenta alguns problemas |
-| Upload Firebase | ![](https://img.shields.io/badge/build-failed-red.svg) | Problemas na internet do ramo |
-| Page local | ![](https://img.shields.io/badge/build-test-yellow.svg)| Aprimorar layout |
-| Page na internet | ![](https://img.shields.io/badge/build-test-yellow.svg) | em teste|
-
-[comment]: <https://img.shields.io/badge/build-unknown-lightgrey.svg>
-
-### [Página online:](https://cas-ieee-ufjf.github.io/IEEE_door_ufjf/)
-https://cas-ieee-ufjf.github.io/IEEE_door_ufjf/
 
 ### Files
 
