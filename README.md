@@ -5,8 +5,8 @@
 | Leitura e separação entre carterinhas cadastradas e não cadastradas | ![](https://img.shields.io/badge/build-passing-rgb(76%2C198%2C31).svg)| -- |
 | Modo reunião | ![](https://img.shields.io/badge/build-passing-rgb(76%2C198%2C31).svg) | -- |
 | Upload Firebase | ![](https://img.shields.io/badge/build-failed-red.svg) | Problemas na internet do ramo |
-| Page local | ![](https://img.shields.io/badge/build-test-yellow.svg)| Aprimorar layout |
-| Page na internet | ![](https://img.shields.io/badge/build-test-yellow.svg) | Aprimorar layout|
+| Page local | ![](https://img.shields.io/badge/build-passing-rgb(76%2C198%2C31).svg)| -- |
+| Page na internet | ![](https://img.shields.io/badge/build-passing-rgb(76%2C198%2C31).svg) | --|
 
 [comment]: <https://img.shields.io/badge/build-unknown-lightgrey.svg>
 
